@@ -2,7 +2,7 @@
 
 ## Project
 
-Repository: `OperationDistinctnessConf1`
+Repository: `BIBM` (renamed from `OperationDistinctnessConf1`)
 
 Target paper:
 
