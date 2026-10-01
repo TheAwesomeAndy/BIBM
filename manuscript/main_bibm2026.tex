@@ -220,7 +220,7 @@ $50\%$ & $0.450$ & $0.474$ & $0.395$ \\
 
 \subsection{External Replication on an Independent Affective Dataset}
 \label{sec:deap}
-We next test whether the effect is specific to SHAPE. On DEAP~\cite{koelstra2012deap} (32 subjects, band-power features, binary valence, within-subject $5$-fold), the same pattern appears and is larger (Fig.~\ref{fig:deapaug}a): at $30\%$ dropout the same features score BA $0.540$ under zero-fill but $0.621$--$0.638$ under mean or $k$NN. With clean BA $0.639$, the fill rule alone moves measured accuracy under dropout by up to $0.11$ BA, on a second dataset, task, and montage. We report this as external validation of the fill-rule effect, not as a replication of the full comparison.
+We next test whether the effect is specific to SHAPE. On DEAP~\cite{koelstra2012deap} (32 subjects, band-power features, binary valence, within-subject $5$-fold), the same pattern appears and is larger (Fig.~\ref{fig:deapaug}a): at $30\%$ dropout the same features score BA $0.540$ under zero-fill ($95\%$ CI $[0.528, 0.552]$) but $0.621$ $[0.591, 0.648]$ under mean and $0.638$ $[0.607, 0.668]$ under $k$NN fill, with CIs from resampling the $32$ subjects' mean BA. With clean BA $0.639$, the fill rule alone moves measured accuracy under dropout by up to $0.11$ BA, on a second dataset, task, and montage. We report this as external validation of the fill-rule effect, not as a replication of the full comparison.
 
 \begin{figure}[t]
 \centering

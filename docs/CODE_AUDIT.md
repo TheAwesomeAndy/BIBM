@@ -48,7 +48,8 @@ Forum S60204 (accepted), camera-ready revision.
 | Signal-level 30% removal, reservoir, train-fold PCA | 0.474 | 0.474 (E1, ρ = 0.9) |
 | DEAP band-power clean | 0.639 | 0.6390 |
 | DEAP 10% removed, zero fill | 0.581 | 0.5808 |
-| DEAP 30% zero / mean / kNN | 0.540 / 0.621 / 0.638 | PENDING |
+| DEAP 30% zero / mean / kNN | 0.540 / 0.621 / 0.638 | 0.5397 / 0.6207 / 0.6381 |
+| All ten DEAP values (clean; 10/30/50% × zero/mean/kNN) vs the uncommitted original run | — | max \|difference\| 4.8e-05 (storage rounding) |
 | Feature-coordinate ERP-window at 30% (zero / mean / kNN / spatial) | 0.536 / 0.578 / 0.610 / 0.589 | PENDING (E2) |
 
 ## 4. Gates now in place

@@ -69,7 +69,7 @@ def build_blocks(d):
     res = d["lsm_bsc6_pca"].astype(float)          # (N, 34, 64)
     if np.allclose(res.std(), 0.0):
         # pickle ships the reservoir block zeroed; use the faithfully
-        # regenerated embedding (scripts/regen_reservoir_embedding.py; validated
+        # regenerated embedding (analysis/regen_reservoir_embedding.py; validated
         # against published clean BA 0.463). Never committed (subject-level).
         npy = os.environ.get("ARSPI_RESERVOIR_NPY", "/tmp/reservoir_bsc6_pca_211.npy")
         res = np.load(npy).astype(float)

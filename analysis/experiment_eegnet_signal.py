@@ -5,7 +5,7 @@ EEGNet-8,2 (Lawhern et al., 2018) is trained per fold on the raw 34x256 ERP sign
 with and without train-time augmentation (random channel dropout and additive
 amplitude noise), and evaluated on the signal-level conditions of perturbations.py: electrodes removed
 from the raw test signal at 0/10/30/50%, 5 dB additive noise, and +/-50 ms jitter. The removed channels in each (seed, fold) are drawn exactly as in
-scripts/experiment2_rawsignal.py (np.random.default_rng(1000*seed + fold)), so EEGNet
+analysis/experiment2_rawsignal.py (np.random.default_rng(1000*seed + fold)), so EEGNet
 and the fixed encoders lose the same electrodes. A removed electrode is a zero raw
 trace; train-only per-channel standardization is then applied as for clean data.
 

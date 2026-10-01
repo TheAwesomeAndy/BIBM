@@ -20,7 +20,7 @@ E2 - feature-coordinate experiment (four fills, 10-50% dropout) with the
      basis). Band power is computed with the documented Welch estimator on the
      analysed signal (as in the signal-level experiment); ERP-window is unchanged.
 
-Usage: python scripts/experiment_camera_ready.py [all|e1|e2]
+Usage: python analysis/experiment_camera_ready.py [all|e1|e2]
 
 Protocol (unchanged from the source): StratifiedGroupKFold(5, shuffle) x seeds
 42-46, subject groups, train-only StandardScaler, balanced L2 logistic readout;

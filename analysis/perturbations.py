@@ -7,7 +7,7 @@ identically. Random draws are keyed to (seed, fold) so that every encoder sees t
 removed electrodes, the same noise realization, and the same timing shifts.
 
 - remove_channels: removed electrodes become zero traces. The draw reproduces
-  scripts/experiment2_rawsignal.py exactly (np.random.default_rng(1000*seed + fold)).
+  analysis/experiment2_rawsignal.py exactly (np.random.default_rng(1000*seed + fold)).
 - amplitude_noise: additive white Gaussian noise at a fixed signal-to-noise ratio,
   computed per observation and channel from the signal's own power.
 - temporal_jitter: each observation is shifted by an integer offset drawn uniformly

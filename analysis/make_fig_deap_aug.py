@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 """Fig. 4 (camera-ready).
 
-(a) External check on DEAP (scripts/deap_replication.py): band-power balanced accuracy versus
+(a) External check on DEAP (analysis/deap_replication.py): band-power balanced accuracy versus
     channels removed under zero, train-mean and kNN fill, with subject-level 95% CIs; the
     clean level and chance are marked.
-(b) Training effect (scripts/experiment_eegnet_signal.py): EEGNet with and without train-time
+(b) Training effect (analysis/experiment_eegnet_signal.py): EEGNet with and without train-time
     augmentation under the shared signal-level conditions (clean, 5 dB noise, +/-50 ms
     jitter, 30% electrodes removed), subject-level 95% CIs.
 Fill rules / models differ by marker, line style and hatch, not color alone. Reads only
