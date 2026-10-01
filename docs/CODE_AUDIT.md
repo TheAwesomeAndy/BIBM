@@ -27,8 +27,8 @@ Forum S60204 (accepted), camera-ready revision.
 |---|---|---|---|
 | A1 | Reservoir code (`regen_reservoir_embedding.py`, `experiment2_rawsignal.py`) is an exact replica of the upstream source (`dissoAdventureExperiments/experiments/ch5_4class/ch5_4class_01_feature_extraction.py`): leak `(1-β)`, multiplicative reset, subtract-θ, floor at 0, Xavier-uniform init (seed 42), ρ = 0.9, BSC6 over t ∈ [10, 70), PCA-64 shared across electrodes. | — | verified |
 | A2 | The paper's LIF equations did not match the code: Eq. 2 used `β v_t` (5% retention for β = 0.05; the code retains 95%), and omitted the reset factor and the rectification at zero. | error in text | Eqs. 2–3 rewritten to the exact update the code implements. |
-| A3 | Band power: the pickle's `conv_feats` (used for the published Tables I and III) cannot be reproduced from the analysed signal `X_ds` with the documented estimator (Welch, nperseg 256, 1–4/4–8/8–13/13–30/30–45 Hz, trapezoid). Median ratio 6.6, band-dependent (≈4× delta to ≈21× beta), so a different signal or preprocessing was used upstream; the upstream code itself computes band power on `X_ds`. Table IV already recomputed band power from `X_ds`, so the paper used two different "band-power" encoders under one name. | inconsistency | Band power is now recomputed from `X_ds` with the documented estimator everywhere. |
-| A4 | Published Tables I, III, IV match their source JSON cell for cell. | — | verified |
+| A3 | Band power: the pickle's `conv_feats` (used for the published Tables I and II) cannot be reproduced from the analysed signal `X_ds` with the documented estimator (Welch, nperseg 256, 1–4/4–8/8–13/13–30/30–45 Hz, trapezoid). Median ratio 6.6, band-dependent (≈4× delta to ≈21× beta), so a different signal or preprocessing was used upstream; the upstream code itself computes band power on `X_ds`. The signal-level table (Table III) already recomputed band power from `X_ds`, so the paper used two different "band-power" encoders under one name. | inconsistency | Band power is now recomputed from `X_ds` with the documented estimator everywhere. |
+| A4 | Published Tables I–III match their source JSON cell for cell. | — | verified |
 | A5 | No committed script for `controls_*.json` (permutation null, PCA component count, amplitude-noise controls), `eegnet*.json`, `deap_replication.json`, or for Figs. 2 and 4. | reproducibility gap | Replaced by committed scripts (E3–E6, `make_fig_erp.py`, `make_fig_deap_aug.py`); the old JSON files are kept for provenance only. |
 | A6 | Methods described a dimensionality-matched random-projection control and temporal jitter, but no result for either was reported. | text/result mismatch | Random-projection sentence removed; jitter now measured (E4, E3). |
 | A7 | Methods stated "BA and macro-F1", but only BA was reported. | text/result mismatch | Table I reports BA, macro-F1 and macro one-vs-rest AUC (E5). |
@@ -41,7 +41,7 @@ Forum S60204 (accepted), camera-ready revision.
 | A14 | One-fold check that the feature-coordinate fill is applied (reservoir, ρ = 0.9): 37/129 (zero) and 38/129 (mean) test predictions change; mean \|Δlogit\| ≈ 0.87 vs mean \|logit\| ≈ 1.69. Aggregate BA nonetheless barely moves because each observation is scored under five partitions with different dropped electrodes. | — | verified, not a bug |
 | A15 | kNN fill can score above the clean encoder (reservoir 0.537 at 50% dropout vs 0.487 clean; band-power 0.504 vs 0.494). `KNNImputer` is fitted on the training subjects only and uses no labels, so this is not leakage: each filled block is the average of ten training neighbours chosen on the retained coordinates, which adds content (a smoother) rather than moving the origin. | interpretation | Stated in the text; kNN gains are not read as robustness, and Proposition 1 is tested on the two constant fills only. |
 | A16 | E3 was launched from `scripts/` before the code moved to `analysis/`. The cached bytecode of its imported `perturbations` module records a source of 2769 bytes, identical to the committed version (dbd1557); the committed `analysis/` copy differs only by one character in a docstring path. | provenance | verified |
-| A17 | The published Table III printed the zero-fill ERP-window − reservoir interval to two decimals; under train-only PCA its lower bound is +0.003, which two decimals render as "+0.00". | presentation | The difference column now has three decimals. |
+| A17 | The published Table II printed the zero-fill ERP-window − reservoir interval to two decimals; under train-only PCA its lower bound is +0.003, which two decimals render as "+0.00". | presentation | The difference column now has three decimals. |
 
 ## 3. Reproduction checks (current library versions: numpy 2.4.6, scikit-learn 1.9.1)
 
@@ -55,6 +55,15 @@ Forum S60204 (accepted), camera-ready revision.
 | All ten DEAP values (clean; 10/30/50% × zero/mean/kNN) vs the uncommitted original run | — | max \|difference\| 4.8e-05 (storage rounding) |
 | Feature-coordinate ERP-window at 30% (zero / mean / kNN / spatial) | 0.536 / 0.578 / 0.610 / 0.589 | 0.5355 / 0.5782 / 0.6098 / 0.5893 (E2) |
 
+Internal consistency across independently written scripts (same quantity, same protocol;
+identical to full floating-point precision):
+
+| Quantity | Scripts | Value |
+|---|---|---|
+| Clean BA, band-power / ERP-window / reservoir (train-only PCA) | E2, E4, E5 (and E1 at ρ = 0.9 for the reservoir) | 0.4945 / 0.6288 / 0.4866 |
+| Reservoir, 30% signal-level electrode removal | E1 (ρ = 0.9), E4, E5 (BSC₆ arm) | 0.4739 |
+| Band-power and ERP-window: signal-level removal at 10/30/50% vs feature-coordinate zero-fill | E4 vs E2 | identical (a flat trace has zero band power and zero window means) |
+
 ## 4. Gates now in place
 
 - `python analysis/check_author_wording.py` — author wording rules.
@@ -62,4 +71,8 @@ Forum S60204 (accepted), camera-ready revision.
   table cell in the paper against `outputs/aggregate/paper_values.csv`
   (written by `analysis/export_paper_values.py`).
 - `python scripts/verify_latex.py manuscript/main_bibm2026.tex` — build (fixed).
-- `python -m papercheck manuscript/main_bibm2026.tex` — harness quality gates.
+- `python -m papercheck manuscript/main_bibm2026.tex` — harness quality gates
+  (PASS; remaining warnings: 5-sentence abstract against a 4-sentence playbook,
+  7 author-approved keywords against a 4–6 default, Related Work before Methods).
+- Body length: the References heading must start no later than page 7; the body
+  (through Data Availability) ends on page 6.

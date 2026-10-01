@@ -38,8 +38,8 @@ on the training subjects of each fold unless a script says otherwise.
 | Spectral-radius sweep (ρ = 0…1.5, ρ = 0 ablation, damage spreading) | `experiment_camera_ready.py e1` | `e1_rho_sweep.json` |
 | Fig. 2 (grand-average affective ERP) | `make_fig_erp.py` | `manuscript/figures/imported/fig_erp.pdf` |
 | Table I (clean BA [CI], macro-F1, macro OvR AUC); permutation null; PCA component count; BSC₁ vs BSC₆; encoder centeredness | `experiment_controls.py` | `e5_controls.json` |
-| Table III, Fig. 3 (feature-coordinate fill experiment, train-only PCA; Fig. 3 plots the paired fill-minus-zero contrasts at every dropout level, `fill_minus_zero`) | `experiment_camera_ready.py e2`; figure: `make_fig_subject_level.py` (also reads `e5_controls.json` for the centeredness legend) | `e2_trainonly_pca_fills.json`; `fig_impute_subj.pdf` |
-| Table IV (signal level: electrode removal 10/30/50%, 5 dB noise, ±50 ms jitter; all encoders) | `experiment_signal_perturbations.py` (band-power, ERP-window, reservoir), `experiment_eegnet_signal.py` (EEGNet ± augmentation) | `e4_signal_perturbations.json`, `e3_eegnet_signal.json` |
+| Table II, Fig. 3 (feature-coordinate fill experiment, train-only PCA; Fig. 3 plots the paired fill-minus-zero contrasts at every dropout level, `fill_minus_zero`) | `experiment_camera_ready.py e2`; figure: `make_fig_subject_level.py` (also reads `e5_controls.json` for the centeredness legend) | `e2_trainonly_pca_fills.json`; `fig_impute_subj.pdf` |
+| Table III (signal level: electrode removal 10/30/50%, 5 dB noise, ±50 ms jitter; all encoders) | `experiment_signal_perturbations.py` (band-power, ERP-window, reservoir), `experiment_eegnet_signal.py` (EEGNet ± augmentation) | `e4_signal_perturbations.json`, `e3_eegnet_signal.json` |
 | Fig. 4 (DEAP fill-rule check; EEGNet training effect) | `deap_replication.py`; figure: `make_fig_deap_aug.py` | `deap_replication_v2.json`; `fig_deap_aug.pdf` |
 | Transductive (pooled-PCA) sensitivity | `regen_reservoir_embedding.py` → `reanalysis_subject_bootstrap.py` | `subject_bootstrap_reanalysis.json` |
 | Shared helpers (band power, ERP windows, fills, subject bootstrap) | `experiment2_rawsignal.py`, `reanalysis_subject_bootstrap.py` | — |
@@ -70,5 +70,5 @@ Then build the paper (`manuscript/BUILD.md`) and run the value gate
 `deap_replication.json` were produced before the camera-ready by scripts that
 were never committed. They are kept for provenance only; no number in the
 camera-ready manuscript depends on them. `experiment2_rawsignal.json` (the
-pre-camera-ready Table IV) is superseded by `e4_signal_perturbations.json`, which embeds
+pre-camera-ready signal-level table) is superseded by `e4_signal_perturbations.json`, which embeds
 training and test reservoir codes with the same PCA transform (see `docs/CODE_AUDIT.md`, A10).

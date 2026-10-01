@@ -10,8 +10,8 @@ Each manifest entry checks (a) the CSV value against the manuscript value within
 tolerance and (b) that the full LaTeX row containing the cell is present in the manuscript,
 so a hand edit that drifts from the data fails the gate.
 
-Sources: e5_controls.json (Table I), e2_trainonly_pca_fills.json (Table III),
-e4_signal_perturbations.json + e3_eegnet_signal.json (Table IV).
+Sources: e5_controls.json (Table I), e2_trainonly_pca_fills.json (Table II),
+e4_signal_perturbations.json + e3_eegnet_signal.json (Table III).
 """
 from __future__ import annotations
 
@@ -81,7 +81,7 @@ def table_clean():
 
 def table_dropconf():
     out = {}
-    # Table III: feature-coordinate experiment at 30%
+    # Table II: feature-coordinate experiment at 30%
     e2 = j("e2_trainonly_pca_fills.json")
     rows = []
     for fill, lab in (("zero", "Zero"), ("mean", "Mean"), ("knn", "$k$NN"), ("spatial", "Spatial")):
@@ -96,7 +96,7 @@ def table_dropconf():
 
 def table_rawsignal():
     out = {}
-    # Table IV: signal level, all encoders
+    # Table III: signal level, all encoders
     e4 = j("e4_signal_perturbations.json")["BA"]; e3 = j("e3_eegnet_signal.json")["BA"]
     rows = []
     for c4, c3, lab in (("clean", "remove_0.0", "Clean"), ("remove_0.1", "remove_0.1", "$10\\%$ removed"),

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Camera-ready experiment E4: signal-level electrode removal (10/30/50%), amplitude noise and
 temporal jitter for the fixed encoders (band-power, ERP-window, reservoir), matching E3 (EEGNet)
-exactly. Supersedes experiment2_rawsignal.py for Table IV: train and test reservoir codes are
+exactly. Supersedes experiment2_rawsignal.py for Table III: train and test reservoir codes are
 both embedded with PCA.transform (experiment2 used fit_transform for training codes, which under
 the randomized SVD solver differs slightly from transform).
 
