@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Generate the subject-level results figure from the hardened reanalysis JSON.
+"""Generate the subject-level results figure from aggregate JSON (default: E2, train-only PCA).
 
 Panel (a): channel-dropout curves (10-50%) for the three fixed encoders under
 zero-fill and kNN fill, showing that the centered reservoir is nearly flat while
@@ -20,7 +20,8 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 
 ROOT = Path(__file__).resolve().parents[1]
-J = json.load(open(ROOT / "outputs/aggregate/subject_bootstrap_reanalysis.json"))
+SRC = os.environ.get("FIG_SUBJ_JSON", "outputs/aggregate/e2_trainonly_pca_fills.json")  # camera-ready: train-only PCA
+J = json.load(open(ROOT / SRC))
 OUT = ROOT / "manuscript/figures/imported/fig_impute_subj.pdf"
 
 plt.rcParams.update({"font.size": 8, "axes.linewidth": 0.8, "figure.dpi": 200,
@@ -62,8 +63,9 @@ axB.set_xticks(xs); axB.set_xticklabels(labels)
 axB.set_xlabel("fill rule"); axB.set_ylabel("ERP-window $-$ reservoir (BA)")
 axB.set_title("(b) paired subject-level difference at 30%", fontsize=8)
 axB.set_xlim(-0.5, 3.5)
-axB.text(0, means[0] + his[0] + 0.006, "n.s.", ha="center", va="bottom", fontsize=6.5)
-axB.text(2.5, means[2] + his[2] + 0.006, "CI excludes 0", ha="center", va="bottom", fontsize=6.5)
+for i in range(len(fills)):   # annotation follows the data, not a fixed expectation
+    axB.text(xs[i], means[i] + his[i] + 0.006, "CI excl. 0" if sig[i] else "n.s.",
+             ha="center", va="bottom", fontsize=6.0)
 
 fig.tight_layout(pad=0.4)
 OUT.parent.mkdir(parents=True, exist_ok=True)

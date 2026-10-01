@@ -56,7 +56,7 @@ ERP/EEG analysis commonly uses time-window amplitudes and latencies, Hjorth \cit
 
 Spiking and deep networks are now widely applied to EEG \cite{gong2023sglnet,lawhern2018eegnet,craik2019deep}. Much of this literature still emphasizes endpoint accuracy, while preprocessing and acquisition choices receive less systematic treatment \cite{delpup2025preprocessing,kornblith2019similarity}. Neuromorphic reservoir features for affective EEG were introduced in prior ARSPI-Net work \cite{lane2023arspi,lane2024arspi}; here we establish their perturbation and invariance properties and identify two scoring artifacts that distort robustness comparisons.
 
-Robustness to noise, artifacts, and electrode loss is increasingly studied. Dynamic spatial filtering handles missing channels with a learned attention front end \cite{banville2022dsf}, and channel-dropout or amplitude-noise augmentation hardens trained models \cite{rommel2022augment}. A recent EEG foundation-model benchmark finds that apparent channel-dropout fragility can depend on whether dropped channels are removed or zero-padded \cite{sirca2026beyond}. We build on that point by separating two scoring effects, raw-retention inflation and zero-fill bias, and using the training-free reservoir as a coordinate-independent reference.
+Robustness to noise, artifacts, and electrode loss is increasingly studied. Dynamic spatial filtering handles missing channels with a learned attention front end \cite{banville2022dsf}, and channel-dropout or amplitude-noise augmentation hardens trained models \cite{rommel2022augment}. A recent EEG foundation-model benchmark finds that apparent channel-dropout fragility can depend on whether dropped channels are removed or zero-padded \cite{sirca2026beyond}. More broadly, missing-data handling in neuroimaging spans a spectrum from constant fills and spherical-spline interpolation of absent electrodes~\cite{perrin1989spherical}, through learned imputation and learned spatial filtering~\cite{banville2022dsf}, to conditional generative synthesis of entire missing modalities with ViT-GAN and latent-diffusion models~\cite{bi2024graymatters,hu2025gmldm}. The four fills we study sit at the simple, non-learned end of that spectrum. We build on the benchmark's point by separating two scoring effects, raw-retention inflation and zero-fill bias, and using the training-free reservoir as a coordinate-independent reference.
 
 \section{Methods}
 \label{sec:methods}
@@ -126,7 +126,7 @@ The experiments use trial-averaged affective ERP data from the Stress, Health, a
 \end{figure*}
 
 \subsection{Validation}
-All results use a single protocol: StratifiedGroupKFold (5 folds, seeds $42$--$46$), train-only standardization, and a balanced L2 logistic readout; observations from the same subject never span train and test. Uncertainty is estimated at the level of the subject, not the fold. For each representation we average the out-of-fold class probabilities of every observation across the five repeated partitions, then form $95\%$ confidence intervals (CIs) by resampling the $211$ subjects with replacement, keeping all three condition observations of a resampled subject together. Comparisons between encoders or fill rules are reported as paired differences under the same subject resampling. We avoid tests over the $25$ folds, which reuse the same subjects and are not independent. Chance is $1/3$ for the three balanced classes, and a label-permutation null lies near that floor (BA $\approx 0.34$). Because the per-observation predictions are averaged over the five partitions, the point estimates below run a few points above the corresponding per-fold means.
+All results use a single protocol: StratifiedGroupKFold (5 folds, seeds $42$--$46$), train-only standardization, and a balanced L2 logistic readout; observations from the same subject never span train and test. Uncertainty is estimated at the level of the subject, not the fold. For each representation we average the out-of-fold class probabilities of every observation across the five repeated partitions, then form $95\%$ confidence intervals (CIs) by resampling the $211$ subjects with replacement, keeping all three condition observations of a resampled subject together. Comparisons between encoders or fill rules are reported as paired differences under the same subject resampling. Because the five partitions are pooled into one prediction per observation before resampling, the dependence among the $25$ overlapping fold estimates, which reuse the same subjects, does not enter the intervals, and no test treats folds as independent samples. Chance is $1/3$ for the three balanced classes, and a label-permutation null lies near that floor (BA $\approx 0.34$). Because the per-observation predictions are averaged over the five partitions, the point estimates below run a few points above the corresponding per-fold means.
 
 \section{Results}
 \subsection{Clean Classification and Controls}
@@ -308,6 +308,15 @@ H. Banville, S. U. N. Wood, C. Aimone, D.-A. Engemann, and A. Gramfort, ``Robust
 
 \bibitem{rommel2022augment}
 C. Rommel, J. Paillard, T. Moreau, and A. Gramfort, ``Data augmentation for learning predictive models on EEG: A systematic comparison,'' \emph{Journal of Neural Engineering}, vol. 19, no. 6, 066020, 2022.
+
+\bibitem{perrin1989spherical}
+F. Perrin, J. Pernier, O. Bertrand, and J. F. Echallier, ``Spherical splines for scalp potential and current density mapping,'' \emph{Electroencephalography and Clinical Neurophysiology}, vol. 72, no. 2, pp. 184--187, 1989.
+
+\bibitem{bi2024graymatters}
+Y. Bi, A. Abrol, S. Jia, J. Sui, and V. D. Calhoun, ``Gray matters: ViT-GAN framework for identifying schizophrenia biomarkers linking structural MRI and functional network connectivity,'' \emph{NeuroImage}, vol. 297, 120674, 2024.
+
+\bibitem{hu2025gmldm}
+X. Hu, J. Yang, S. Jia, Y. Bi, and V. D. Calhoun, ``GM-LDM: Latent diffusion model for brain biomarker identification through functional data-driven gray matter synthesis,'' arXiv:2506.12719, 2025.
 
 \bibitem{koelstra2012deap}
 S. Koelstra \emph{et al.}, ``DEAP: A database for emotion analysis using physiological signals,'' \emph{IEEE Trans. Affective Computing}, vol. 3, no. 1, pp. 18--31, 2012.
