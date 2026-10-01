@@ -4,7 +4,7 @@ This repository contains the IEEE BIBM 2026 conference-paper carve-out from the 
 
 ## Working title
 
-**On the Edge of Stability: Spiking-Reservoir State-Space Encoding of Affective EEG**
+**On the Edge of Stability: Spiking Reservoir State-Space Encoding of Affective EEG**
 
 ## Submission target
 

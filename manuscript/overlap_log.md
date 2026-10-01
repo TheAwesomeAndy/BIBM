@@ -3,7 +3,7 @@
 ## Submission
 
 **Target:** IEEE BIBM 2026  
-**Working title:** On the Edge of Stability: Spiking-Reservoir State-Space Encoding of Affective EEG
+**Working title:** On the Edge of Stability: Spiking Reservoir State-Space Encoding of Affective EEG
 
 ## Purpose
 
@@ -81,4 +81,4 @@ List as an IEEE BIBM proceedings paper unless official IEEE metadata explicitly 
 
 Suggested citation format:
 
-Andrew A. Lane, W. Tang, and B. D. Nelson, "On the Edge of Stability: Spiking-Reservoir State-Space Encoding of Affective EEG," in Proceedings of the IEEE International Conference on Bioinformatics and Biomedicine (BIBM), Dallas, TX, USA, 2026.
+Andrew A. Lane, W. Tang, and B. D. Nelson, "On the Edge of Stability: Spiking Reservoir State-Space Encoding of Affective EEG," in Proceedings of the IEEE International Conference on Bioinformatics and Biomedicine (BIBM), Dallas, TX, USA, 2026.
