@@ -20,6 +20,7 @@ Reads the restricted SHAPE pickle locally; writes only aggregate JSON.
 from __future__ import annotations
 
 import json
+import os
 import pickle
 import sys
 import time
@@ -142,7 +143,23 @@ def main():
             md, lo, hi, _ = RB.paired_diff_ci(y, g, pm[m], pm["ERP-window"])
             res["paired_minus_ERPwindow"][c][m] = {"mean_diff": md, "ci95": [lo, hi]}
         print(f"[E3 {c}] " + " | ".join(f"{m}={pt[m]:.3f}[{ci[m][0]:.3f},{ci[m][1]:.3f}]" for m in pm), flush=True)
-    out = Path(__file__).resolve().parents[1] / "outputs" / "aggregate" / "e3_eegnet_signal.json"
+    # training effect and losses as paired subject-level contrasts under the same resampling
+    res["paired_aug_minus_unaug"] = {}
+    res["paired_clean_minus_condition"] = {}
+    for c in conds:
+        md, lo, hi, _ = RB.paired_diff_ci(y, g, preds[("EEGNet+aug", c)], preds[("EEGNet", c)])
+        res["paired_aug_minus_unaug"][c] = {"mean_diff": md, "ci95": [lo, hi]}
+        if c == "remove_0.0":
+            continue
+        res["paired_clean_minus_condition"][c] = {}
+        for m in ("EEGNet", "EEGNet+aug"):
+            md, lo, hi, _ = RB.paired_diff_ci(y, g, preds[(m, "remove_0.0")], preds[(m, c)])
+            res["paired_clean_minus_condition"][c][m] = {"mean_diff": md, "ci95": [lo, hi]}
+        print(f"[E3 paired {c}] aug-unaug={res['paired_aug_minus_unaug'][c]['mean_diff']:+.3f} "
+              f"[{res['paired_aug_minus_unaug'][c]['ci95'][0]:+.3f},{res['paired_aug_minus_unaug'][c]['ci95'][1]:+.3f}]",
+              flush=True)
+    out = Path(os.environ.get("E3_OUT", Path(__file__).resolve().parents[1] / "outputs" / "aggregate"
+                              / "e3_eegnet_signal.json"))
     json.dump(res, open(out, "w"), indent=2)
     print(f"[out] wrote {out}")
     return 0
