@@ -63,6 +63,8 @@ identical to full floating-point precision):
 | Clean BA, band-power / ERP-window / reservoir (train-only PCA) | E2, E4, E5 (and E1 at ρ = 0.9 for the reservoir) | 0.4945 / 0.6288 / 0.4866 |
 | Reservoir, 30% signal-level electrode removal | E1 (ρ = 0.9), E4, E5 (BSC₆ arm) | 0.4739 |
 | Band-power and ERP-window: signal-level removal at 10/30/50% vs feature-coordinate zero-fill | E4 vs E2 | identical (a flat trace has zero band power and zero window means) |
+| E2 rerun (adds per-level fill contrasts) vs first run | E2 | every earlier field identical |
+| E3 rerun (adds paired augmentation and loss contrasts) vs first run | E3 | every BA and paired value identical (CPU training is deterministic with fixed seeds and two threads) |
 
 ## 4. Gates now in place
 
