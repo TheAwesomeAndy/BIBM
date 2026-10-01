@@ -39,6 +39,9 @@ Forum S60204 (accepted), camera-ready revision.
 | A12 | "BSC₁ matches BSC₆ within the subject-level interval" had no subject-level computation behind it. | unsupported claim | Computed at subject level (E5). |
 | A13 | Author wording rules (memory journal #16) were violated in 9 places in the July text. | style rule | Fixed; `analysis/check_author_wording.py` now enforces them. |
 | A14 | One-fold check that the feature-coordinate fill is applied (reservoir, ρ = 0.9): 37/129 (zero) and 38/129 (mean) test predictions change; mean \|Δlogit\| ≈ 0.87 vs mean \|logit\| ≈ 1.69. Aggregate BA nonetheless barely moves because each observation is scored under five partitions with different dropped electrodes. | — | verified, not a bug |
+| A15 | kNN fill can score above the clean encoder (reservoir 0.537 at 50% dropout vs 0.487 clean; band-power 0.504 vs 0.494). `KNNImputer` is fitted on the training subjects only and uses no labels, so this is not leakage: each filled block is the average of ten training neighbours chosen on the retained coordinates, which adds content (a smoother) rather than moving the origin. | interpretation | Stated in the text; kNN gains are not read as robustness, and Proposition 1 is tested on the two constant fills only. |
+| A16 | E3 was launched from `scripts/` before the code moved to `analysis/`. The cached bytecode of its imported `perturbations` module records a source of 2769 bytes, identical to the committed version (dbd1557); the committed `analysis/` copy differs only by one character in a docstring path. | provenance | verified |
+| A17 | The published Table III printed the zero-fill ERP-window − reservoir interval to two decimals; under train-only PCA its lower bound is +0.003, which two decimals render as "+0.00". | presentation | The difference column now has three decimals. |
 
 ## 3. Reproduction checks (current library versions: numpy 2.4.6, scikit-learn 1.9.1)
 

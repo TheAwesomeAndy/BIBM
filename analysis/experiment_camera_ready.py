@@ -19,6 +19,8 @@ E2 - feature-coordinate experiment (four fills, 10-50% dropout) with the
      reservoir embedding fit by train-only PCA in every fold (instead of the pooled
      basis). Band power is computed with the documented Welch estimator on the
      analysed signal (as in the signal-level experiment); ERP-window is unchanged.
+     Paired subject-level contrasts of each fill against zero-fill are reported at
+     every dropout level (`fill_minus_zero`, used by Fig. 3).
 
 Usage: python analysis/experiment_camera_ready.py [all|e1|e2]
 
@@ -223,6 +225,13 @@ def run_e2(d, y, g, cache09):
         out["mean_minus_zero_30"][n] = {"mean_diff": m, "ci95": [lo, hi]}
         out["curve_BA"][n] = {fill: {str(int(f * 100)): float(balanced_accuracy_score(
             y, preds[(n, f, fill)])) for f in RB.DROP_LEVELS} for fill in RB.FILLS}
+    # paired subject-level contrast of every fill against zero-fill, at every dropout level
+    out["fill_minus_zero"] = {n: {fill: {} for fill in RB.FILLS if fill != "zero"} for n in names}
+    for n in names:
+        for fill in out["fill_minus_zero"][n]:
+            for f in RB.DROP_LEVELS:
+                m, lo, hi, _ = RB.paired_diff_ci(y, g, preds[(n, f, fill)], preds[(n, f, "zero")])
+                out["fill_minus_zero"][n][fill][str(int(f * 100))] = {"mean_diff": m, "ci95": [lo, hi]}
     return out
 
 
