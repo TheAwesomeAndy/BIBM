@@ -2,11 +2,11 @@
 
 ## Project
 
-Repository: `OperationDistinctnessConf1`
+Repository: `BIBM` (renamed from `OperationDistinctnessConf1`)
 
 Target paper:
 
-**On the Edge of Stability: Spiking-Reservoir State-Space Encoding of Affective EEG**
+**On the Edge of Stability: Spiking Reservoir State-Space Encoding of Affective EEG**
 
 Submission target: IEEE BIBM 2026 Doctoral Forum route, written as a standard IEEE BIBM proceedings paper.
 
