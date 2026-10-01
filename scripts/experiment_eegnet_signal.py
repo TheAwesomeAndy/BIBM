@@ -3,8 +3,8 @@
 
 EEGNet-8,2 (Lawhern et al., 2018) is trained per fold on the raw 34x256 ERP signal,
 with and without train-time augmentation (random channel dropout and additive
-amplitude noise), and evaluated with electrodes removed from the raw test signal at
-0/10/30/50%. The removed channels in each (seed, fold) are drawn exactly as in
+amplitude noise), and evaluated on the signal-level conditions of perturbations.py: electrodes removed
+from the raw test signal at 0/10/30/50%, 5 dB additive noise, and +/-50 ms jitter. The removed channels in each (seed, fold) are drawn exactly as in
 scripts/experiment2_rawsignal.py (np.random.default_rng(1000*seed + fold)), so EEGNet
 and the fixed encoders lose the same electrodes. A removed electrode is a zero raw
 trace; train-only per-channel standardization is then applied as for clean data.
@@ -33,6 +33,7 @@ from sklearn.model_selection import StratifiedGroupKFold
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import reanalysis_subject_bootstrap as RB  # noqa: E402
 import experiment2_rawsignal as E2S  # noqa: E402
+import perturbations as PT  # noqa: E402
 
 SEEDS = [42, 43, 44, 45, 46]
 LEVELS = [0.0, 0.1, 0.3, 0.5]
@@ -92,49 +93,55 @@ def to_input(raw, mu, sd):
     return ((raw - mu) / sd).transpose(0, 2, 1)[:, None, :, :]
 
 
+def conditions(X, seed, fold):
+    """Yield (name, corrupted signal) for every signal-level condition, shared draws (perturbations.py)."""
+    for frac in LEVELS:
+        Xc, _ = PT.remove_channels(X, frac, seed, fold)
+        yield f"remove_{frac:.1f}", Xc
+    for name, fn in PT.SIGNAL_CONDITIONS.items():
+        yield name, fn(X, seed, fold)
+
+
 def main():
     d = pickle.load(open(RB._resolve_pickle(), "rb"))
     X = np.asarray(d["X_ds"], float); y = np.asarray(d["y"]); g = np.asarray(d["subjects"])
     N, T, C = X.shape; classes = np.unique(y)
-    erp = E2S.erp_all(X)
-    acc = {(m, f): np.zeros((N, classes.size)) for m in ("EEGNet", "EEGNet+aug", "ERP-window")
-           for f in LEVELS}
+    conds = [f"remove_{f:.1f}" for f in LEVELS] + list(PT.SIGNAL_CONDITIONS)
+    models_ = ("EEGNet", "EEGNet+aug", "ERP-window")
+    acc = {(m, c): np.zeros((N, classes.size)) for m in models_ for c in conds}
     t0 = time.time()
     for seed in SEEDS:
         cv = StratifiedGroupKFold(5, shuffle=True, random_state=seed)
         for fold, (tr, te) in enumerate(cv.split(np.zeros((N, 1)), y, groups=g)):
             mu = X[tr].mean(axis=(0, 1)); sd = X[tr].std(axis=(0, 1)) + 1e-8
-            models = {"EEGNet": train_eegnet(to_input(X[tr], mu, sd), y[tr], 100 * seed + fold, False),
-                      "EEGNet+aug": train_eegnet(to_input(X[tr], mu, sd), y[tr], 100 * seed + fold, True)}
-            for frac in LEVELS:
-                rng = np.random.default_rng(1000 * seed + fold)
-                drop = rng.choice(C, int(round(frac * C)), replace=False) if frac > 0 else np.array([], int)
-                Xte = X[te].copy(); Xte[:, :, drop] = 0.0           # removed electrode = zero trace
+            nets = {"EEGNet": train_eegnet(to_input(X[tr], mu, sd), y[tr], 100 * seed + fold, False),
+                    "EEGNet+aug": train_eegnet(to_input(X[tr], mu, sd), y[tr], 100 * seed + fold, True)}
+            erp_tr = E2S.erp_all(X[tr]).reshape(len(tr), -1)
+            for cname, Xte in conditions(X[te], seed, fold):
                 xin = torch.tensor(to_input(Xte, mu, sd), dtype=torch.float32)
-                for name, model in models.items():
+                for name, net in nets.items():
                     with torch.no_grad():
-                        acc[(name, frac)][te] += torch.softmax(model(xin), 1).numpy()
-                E2S._fit_pred(erp[tr].reshape(len(tr), -1), y[tr],
-                              E2S.zero_channels(erp[te], drop).reshape(len(te), -1),
-                              seed, acc[("ERP-window", frac)], te, classes)
+                        acc[(name, cname)][te] += torch.softmax(net(xin), 1).numpy()
+                E2S._fit_pred(erp_tr, y[tr], E2S.erp_all(Xte).reshape(len(te), -1),
+                              seed, acc[("ERP-window", cname)], te, classes)
             print(f"[E3] seed {seed} fold {fold} done ({time.time() - t0:.0f}s)", flush=True)
     preds = {k: classes[np.argmax(v, axis=1)] for k, v in acc.items()}
     res = {"protocol": "EEGNet-8,2 (F1=8,D=2,F2=16,k=64,dropout=%.2f), Adam lr=%g, %d epochs, batch %d; "
            "aug: per-sample p=0.5 zero 0-50%% channels + Gaussian noise std~U(0,0.5); "
-           "signal-level removal drawn as in experiment2_rawsignal.py; StratifiedGroupKFold(5) x "
-           "seeds 42-46; train-only per-channel z-score; OOF proba averaged over partitions; "
-           "subject-level bootstrap n_boot=%d" % (DROPOUT, LR, EPOCHS, BATCH, RB.N_BOOT),
+           "signal-level conditions from perturbations.py (removal draw as in experiment2_rawsignal.py; "
+           "5 dB additive noise; +/-50 ms alignment jitter); StratifiedGroupKFold(5) x seeds 42-46; "
+           "train-only per-channel z-score; OOF proba averaged over partitions; subject-level "
+           "bootstrap n_boot=%d" % (DROPOUT, LR, EPOCHS, BATCH, RB.N_BOOT),
            "BA": {}, "paired_minus_ERPwindow": {}}
-    for frac in LEVELS:
-        pm = {m: preds[(m, frac)] for m in ("EEGNet", "EEGNet+aug", "ERP-window")}
+    for c in conds:
+        pm = {m: preds[(m, c)] for m in models_}
         pt, ci, _ = RB.subject_bootstrap(y, g, pm)
-        res["BA"][f"{frac:.1f}"] = {m: {"BA": pt[m], "ci95": list(ci[m])} for m in pm}
-        res["paired_minus_ERPwindow"][f"{frac:.1f}"] = {}
+        res["BA"][c] = {m: {"BA": pt[m], "ci95": list(ci[m])} for m in pm}
+        res["paired_minus_ERPwindow"][c] = {}
         for m in ("EEGNet", "EEGNet+aug"):
             md, lo, hi, _ = RB.paired_diff_ci(y, g, pm[m], pm["ERP-window"])
-            res["paired_minus_ERPwindow"][f"{frac:.1f}"][m] = {"mean_diff": md, "ci95": [lo, hi]}
-        print(f"[E3 {int(frac * 100)}%] " + " | ".join(
-            f"{m}={pt[m]:.3f}[{ci[m][0]:.3f},{ci[m][1]:.3f}]" for m in pm), flush=True)
+            res["paired_minus_ERPwindow"][c][m] = {"mean_diff": md, "ci95": [lo, hi]}
+        print(f"[E3 {c}] " + " | ".join(f"{m}={pt[m]:.3f}[{ci[m][0]:.3f},{ci[m][1]:.3f}]" for m in pm), flush=True)
     out = Path(__file__).resolve().parents[1] / "outputs" / "aggregate" / "e3_eegnet_signal.json"
     json.dump(res, open(out, "w"), indent=2)
     print(f"[out] wrote {out}")

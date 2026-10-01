@@ -17,7 +17,10 @@ E1 - spectral-radius sweep. The recurrent matrix W is rescaled to rho in RHO_GRI
 
 E2 - feature-coordinate experiment (four fills, 10-50% dropout) with the
      reservoir embedding fit by train-only PCA in every fold (instead of the pooled
-     basis). Band-power and ERP-window blocks are unchanged (no PCA).
+     basis). Band power is computed with the documented Welch estimator on the
+     analysed signal (as in the signal-level experiment); ERP-window is unchanged.
+
+Usage: python scripts/experiment_camera_ready.py [all|e1|e2]
 
 Protocol (unchanged from the source): StratifiedGroupKFold(5, shuffle) x seeds
 42-46, subject groups, train-only StandardScaler, balanced L2 logistic readout;
@@ -44,6 +47,7 @@ from sklearn.preprocessing import StandardScaler
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import reanalysis_subject_bootstrap as RB  # noqa: E402  (fills, bootstrap, blocks)
+import experiment2_rawsignal as E2S  # noqa: E402  (band-power estimator)
 
 N_RES, BETA, THETA, SEED = 256, 0.05, 0.5, 42
 BSC_N_BINS, T_START, T_END, PCA_K = 6, 10, 70, 64
@@ -173,8 +177,12 @@ def run_e1(X_ds, y, g, ref_rho=0.9):
 def run_e2(d, y, g, cache09):
     """Feature-coordinate experiment with train-only PCA for the reservoir (rho = 0.9)."""
     N = len(y); classes = np.unique(y); n_ch = 34
-    band = d["conv_feats"].astype(float)
+    # Band power from the documented estimator on the analysed signal (Welch, nperseg 256,
+    # bands 1-4/4-8/8-13/13-30/30-45 Hz, trapezoid), identical to the signal-level experiment.
+    # The pickle's conv_feats are NOT used: they cannot be reproduced from X_ds with that
+    # estimator (audit, camera-ready), so all band-power results now share one definition.
     Xds = d["X_ds"].astype(float)
+    band = E2S.bandpower_all(Xds)
     erp = np.zeros((N, n_ch, 3))
     for w, (a, b) in enumerate(RB.ERP_WINDOWS_MS):
         erp[:, :, w] = Xds[:, int(round(a / 1000 * RB.FS)):int(round(b / 1000 * RB.FS)), :].mean(axis=1)
@@ -224,10 +232,18 @@ def main():
     proto = ("StratifiedGroupKFold(5,shuffle) x seeds 42-46; train-only StandardScaler; balanced L2 "
              "logreg; train-only PCA-64 per fold; OOF probabilities averaged over partitions; "
              "subject-level bootstrap n_boot=%d" % RB.N_BOOT)
-    e1, cache09 = run_e1(X_ds, y, g)
-    e1["protocol"] = proto
-    json.dump(e1, open(OUT / "e1_rho_sweep.json", "w"), indent=2)
-    print("[out] wrote e1_rho_sweep.json", flush=True)
+    part = sys.argv[1] if len(sys.argv) > 1 else "all"          # all | e1 | e2
+    cache09 = []
+    if part in ("all", "e1"):
+        e1, cache09 = run_e1(X_ds, y, g)
+        e1["protocol"] = proto
+        json.dump(e1, open(OUT / "e1_rho_sweep.json", "w"), indent=2)
+        print("[out] wrote e1_rho_sweep.json", flush=True)
+        if part == "e1":
+            return 0
+    if not cache09:                                               # E2 alone: rebuild rho = 0.9 folds
+        B, _ = bsc6(X_ds, 0.9)
+        cache09 = [(s_, f_, tr, te, E.astype(np.float32)) for s_, f_, tr, te, E, _v in fold_embeddings(B, y, g)]
     e2 = run_e2(d, y, g, cache09)
     e2["protocol"] = proto + "; reservoir rho=0.9"
     json.dump(e2, open(OUT / "e2_trainonly_pca_fills.json", "w"), indent=2)

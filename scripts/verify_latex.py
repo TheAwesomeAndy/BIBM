@@ -20,14 +20,19 @@ from pathlib import Path
 
 
 def build_latex(tex_file: str) -> int:
+    # The build runs inside the file's own directory (so relative \input and
+    # \includegraphics paths resolve), so pass the bare file name: passing the
+    # caller-relative path from inside that directory fails for any manuscript
+    # that lives in a subdirectory (e.g. manuscript/main.tex).
+    tex_name = Path(tex_file).name
     # Prefer latexmk because it handles multi-pass compilation automatically.
     latexmk = shutil.which("latexmk")
     if latexmk:
-        cmd = [latexmk, "-pdf", "-interaction=nonstopmode", tex_file]
+        cmd = [latexmk, "-pdf", "-interaction=nonstopmode", tex_name]
     else:
         pdflatex = shutil.which("pdflatex")
         if pdflatex:
-            cmd = [pdflatex, "-interaction=nonstopmode", tex_file]
+            cmd = [pdflatex, "-interaction=nonstopmode", tex_name]
         else:
             print("Error: neither latexmk nor pdflatex is installed.", file=sys.stderr)
             return 1

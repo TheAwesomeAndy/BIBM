@@ -95,7 +95,7 @@ def main():
     ax.set_xlabel("PC1", labelpad=-9); ax.set_ylabel("PC2", labelpad=-9); ax.set_zlabel("PC3", labelpad=-9)
     ax.tick_params(labelsize=5, pad=-2.5)
     ax.legend(fontsize=6, loc="upper left", title="start", title_fontsize=6, frameon=False)
-    cb = fig.colorbar(lc, ax=ax, fraction=0.03, pad=0.04); cb.set_label("time", fontsize=6.5)
+    cb = fig.colorbar(lc, ax=ax, fraction=0.03, pad=0.10); cb.set_label("time", fontsize=6.5)
     cb.ax.tick_params(labelsize=5.5)
     ax.set_title("(b) state-space trajectory", fontsize=9, loc="left")
 
@@ -107,11 +107,11 @@ def main():
         hi = np.array([E1["BA"][str(r)][key]["ci95"][1] for r in rhos])
         ax.errorbar(rhos, b, yerr=[b - lo, hi - b], fmt=mk + ls, color="black", ms=4, lw=1.1,
                     capsize=2, mfc="white" if ls == "--" else "black", label=lab)
-    ax.axhline(1 / 3, color="0.4", lw=0.7, ls=":"); ax.text(rhos[-1], 1 / 3 + 0.004, "chance", ha="right", va="bottom", fontsize=6.5)
+    ax.axhline(1 / 3, color="0.4", lw=0.7, ls=":"); ax.text(rhos[0], 1 / 3 + 0.004, "chance", ha="left", va="bottom", fontsize=6.5)
     ax.axvline(0.9, color="0.3", lw=0.9, ls="-.")
     ax.set_xlabel(r"spectral radius $\rho$"); ax.set_ylabel("balanced accuracy")
     ax.set_title(r"(c) accuracy versus $\rho$", fontsize=9, loc="left")
-    ax.legend(fontsize=6.3, loc="lower right", frameon=False)
+    ax.set_ylim(0.31, 0.565); ax.legend(fontsize=6.3, loc="upper center", ncol=2, frameon=False)
 
     ax = fig.add_subplot(gs[1, 1])
     rstar, r, v = transition(E1["damage"])
@@ -119,7 +119,7 @@ def main():
     ax.plot(r, v, "-o", color="black", ms=3, lw=1.1)
     ax.axvline(1.0, color="0.4", lw=0.9, ls=":"); ax.axvline(0.9, color="0.3", lw=0.9, ls="-.")
     ax.text(0.04, 0.92, "ordered", transform=ax.transAxes, fontsize=6.5)
-    ax.text(0.96, 0.92, "irregular", transform=ax.transAxes, fontsize=6.5, ha="right")
+    ax.text(0.96, 0.06, "irregular", transform=ax.transAxes, fontsize=6.5, ha="right")
     ax.set_xlabel(r"spectral radius $\rho$"); ax.set_ylabel("damage after one-spike flip")
     ax.set_title(r"(d) measured transition, $\rho^\ast\!\approx\!%.1f$" % rstar, fontsize=9, loc="left")
     ax.set_xlim(r.min(), r.max())
