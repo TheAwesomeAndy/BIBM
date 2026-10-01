@@ -6,7 +6,7 @@ Repository: `OperationDistinctnessConf1`
 
 Target paper:
 
-**Spiking Reservoir State-Space Encoding for Perturbation-Characterized Affective EEG Signal Analysis**
+**On the Edge of Stability: Spiking-Reservoir State-Space Encoding of Affective EEG**
 
 Submission target: IEEE BIBM 2026 Doctoral Forum route, written as a standard IEEE BIBM proceedings paper.
 
@@ -196,14 +196,14 @@ Before committing, always run a restricted-data check.
 
 Finished source figures are reused. Do not regenerate figures unless a required output truly does not exist.
 
-Current imported figure assets:
+Figures used by the camera-ready manuscript (each produced by a committed script in `analysis/`):
 
-* `manuscript/figures/imported/fig_reservoir_dynamics.pdf`
-* `manuscript/figures/imported/ana03_robustness_degradation_curves.pdf`
-* `manuscript/figures/imported/fig_overview_evidence_streams.pdf`
-* `manuscript/figures/imported/arch_fig_pipeline_overview.pdf`
+* `manuscript/figures/imported/fig_reservoir_dyn.pdf` (Fig. 1) — `analysis/make_fig_reservoir_dynamics.py`
+* `manuscript/figures/imported/fig_erp.pdf` (Fig. 2) — `analysis/make_fig_erp.py`
+* `manuscript/figures/imported/fig_impute_subj.pdf` (Fig. 3) — `analysis/make_fig_subject_level.py`
+* `manuscript/figures/imported/fig_deap_aug.pdf` (Fig. 4) — `analysis/make_fig_deap_aug.py`
 
-The full overview figure visually overstates the narrow BIBM scope because it depicts the broader E/D/T/C and closed-loop framework. Prefer using `fig_reservoir_dynamics.pdf` as the primary figure unless explicitly instructed otherwise.
+Other files in `manuscript/figures/imported/` are earlier assets kept for provenance and are not used by the manuscript. The full overview figure (`fig_overview_evidence_streams.pdf`) visually overstates the narrow BIBM scope because it depicts the broader E/D/T/C and closed-loop framework; do not use it.
 
 Figures must be:
 

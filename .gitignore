@@ -38,3 +38,6 @@ harness/reports/*.md
 __pycache__/
 *.py[cod]
 .pytest_cache/
+
+# Reviewer-response working notes: peer reviews are confidential; keep local unless the repo is private.
+submission/
