@@ -9,7 +9,7 @@
     recurrence.
 (d) Damage-spreading order parameter versus rho (E1): mean normalized Hamming distance
     after a one-spike flip; the measured transition and the operating point rho = 0.9 are
-    marked, with the linear stability boundary rho = 1 for reference.
+    marked, with the echo-state heuristic rho = 1 for reference.
 
 Replaces the earlier eigenvalue-spectrum and state-separation panels, which reviewers noted
 were properties of the construction rather than results. Reads the restricted SHAPE pickle
@@ -89,7 +89,7 @@ def main():
     ax.set_title("(a) LIF spike raster", fontsize=7, loc="left", pad=3)
 
     ax = fig.add_subplot(gs[0, 1], projection="3d")
-    ax.set_box_aspect(None, zoom=1.0)   # color runs from onset (dark) to the end of the epoch (light)
+    ax.set_box_aspect(None, zoom=1.0)   # color runs from epoch start (dark) to the end of the epoch (light)
     tn = np.linspace(0, 1, X.shape[1])
     for c, mk in zip((0, 1, 2), ("o", "s", "^")):
         P = pca.transform(tr[c][1]); pts = P.reshape(-1, 1, 3)

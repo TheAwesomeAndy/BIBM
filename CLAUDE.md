@@ -216,7 +216,7 @@ Before reporting completion, compile:
 
 Required checks:
 
-* page count ≤ 6 before CV appendix,
+* body (through Data Availability) ends on page 6; references may run onto page 7 (the Doctoral Forum limit is six pages excluding references and appendices),
 * zero undefined references,
 * zero undefined citations,
 * no missing figures,
