@@ -2,8 +2,10 @@
 """Fig. 2: trial-averaged affective ERP data (SHAPE cohort, grand averages over 211 subjects).
 
 (a) Grand-average waveforms per condition at the most affect-discriminative channel (largest
-    |emotional - neutral| mean amplitude in the 450-800 ms late-positive-potential window);
-(b) spatiotemporal map of the emotional-minus-neutral difference over all 34 channels;
+    |emotional - neutral| mean amplitude in the late ERP-window feature, sample-index 450-800 ms,
+    i.e. about 250-600 ms after stimulus onset; time axes are plotted relative to onset);
+(b) spatiotemporal map of the emotional-minus-neutral difference over all 34 channels, with
+    "-"/"+" markers so the sign survives grayscale printing;
 (c) global field power (SD across channels) per condition.
 Conditions differ by line style as well as color (grayscale-legible). Reads the restricted
 SHAPE pickle locally; writes only the figure (group averages, no subject-level data).
@@ -67,6 +69,9 @@ def main():
                     norm=colors.TwoSlopeNorm(0, -vmax, vmax), extent=[t[0], t[-1], 0, diff.shape[0]])
     ax1.axvline(lo, color="k", lw=0.5, ls=":"); ax1.axvline(hi, color="k", lw=0.5, ls=":")
     ax1.axvline(0, color="k", lw=0.6, ls="--")
+    for tx, lab in ((-100, "$-$"), (560, "$+$")):          # sign of the difference, legible without color
+        ax1.text(tx, 3.5, lab, ha="center", va="center", fontsize=8, fontweight="bold",
+                 bbox=dict(boxstyle="circle,pad=0.15", fc="white", ec="black", lw=0.5))
     ax1.set_xlabel("time (ms)", labelpad=1); ax1.set_ylabel("channel", labelpad=1)
     ax1.set_title("(b) emotional $-$ neutral, all channels", fontsize=7, loc="left", pad=3)
     fig.colorbar(im, ax=ax1, fraction=0.045, pad=0.02).ax.tick_params(labelsize=5, length=1.5, pad=1)

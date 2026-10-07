@@ -115,23 +115,18 @@ Prefer:
 
 ## PCA protocol and language
 
-The source audit found that the original reservoir embedding uses global pooled PCA:
+The reservoir embedding's PCA basis is unsupervised (fit without labels). The submitted version fit it once over the full cohort, which is transductive with respect to subject inclusion and must not be called leakage-free preprocessing. Following reviewer request R2.2, the camera-ready fits the basis on the training subjects of each fold in every main analysis (E1–E5, `analysis/experiment_camera_ready.py` and siblings) and reports the pooled basis only as a sensitivity check:
 
-* PCA is fit once, unsupervised and without labels.
-* The basis is estimated over the full cohort.
-* It is therefore transductive with respect to subject inclusion.
-* It must not be called leakage-free preprocessing.
+| Representation                                   | BA (subject level, partitions pooled) |
+| ------------------------------------------------ | ------------------------------------: |
+| Train-only PCA per fold (camera-ready default)   |                  0.487 [0.447, 0.523] |
+| Pooled (transductive) PCA, sensitivity check     |                  0.485 [0.447, 0.521] |
 
-Fold-local PCA sensitivity was run:
-
-| Representation             |     BA | Macro-F1 | Macro-OvR AUC |
-| -------------------------- | -----: | -------: | ------------: |
-| Fixed global pooled PCA A1 | 0.4626 |   0.4603 |        0.6440 |
-| Fold-local PCA A1          | 0.4652 |   0.4619 |        0.6485 |
+The earlier per-fold means (pooled 0.4626, fold-local 0.4652) remain the reproduction anchors in `docs/CODE_AUDIT.md`.
 
 Required interpretation:
 
-The fold-local sensitivity analysis did not show evidence of optimistic inflation from the transductive PCA basis under the tested subject-grouped protocol.
+The sensitivity check did not show evidence of optimistic inflation from the transductive PCA basis under the tested subject-grouped protocol.
 
 Do not say:
 
