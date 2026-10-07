@@ -35,6 +35,9 @@ BSC_N_BINS, T_START, T_END, PCA_K = 6, 10, 70, 64
 SEEDS = [42, 43, 44, 45, 46]
 FS = 256
 LEVELS = [0.1, 0.2, 0.3, 0.4, 0.5]
+# Windows are in sample-index milliseconds (sample / 256 Hz), measured from the FIRST sample of
+# X_ds, which is 200 ms before stimulus onset (X_ds == raw[0:1024:4]; onset at raw sample 205,
+# X_ds sample 51). Relative to onset they span about -120..0, 50..250 and 250..600 ms.
 ERP_WINDOWS_MS = [(80, 200), (250, 450), (450, 800)]
 BANDS = [(1, 4), (4, 8), (8, 13), (13, 30), (30, 45)]
 N_BOOT = 4000

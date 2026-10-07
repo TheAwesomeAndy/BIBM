@@ -56,10 +56,14 @@ def trace(x, rho=0.9):
 
 
 def transition(dmg):
-    """Smallest rho at which the one-spike flip leaves damage above half its grid maximum."""
+    """rho at which the damage, linearly interpolated between grid points, reaches half its maximum."""
     keys = sorted(dmg, key=float)
     r = np.array([float(k) for k in keys]); v = np.array([dmg[k] for k in keys])
-    return float(r[np.argmax(v >= 0.5 * v.max())]), r, v
+    i = int(np.argmax(v >= 0.5 * v.max()))
+    if i == 0:
+        return float(r[0]), r, v
+    rstar = r[i - 1] + (0.5 * v.max() - v[i - 1]) / (v[i] - v[i - 1]) * (r[i] - r[i - 1])
+    return float(rstar), r, v
 
 
 def main():
@@ -126,7 +130,7 @@ def main():
     ax.text(0.04, 0.90, "ordered", transform=ax.transAxes, fontsize=5.5)
     ax.text(0.96, 0.06, "irregular", transform=ax.transAxes, fontsize=5.5, ha="right")
     ax.set_xlabel(r"spectral radius $\rho$", labelpad=1); ax.set_ylabel("damage after one-spike flip", labelpad=1)
-    ax.set_title(r"(d) transition, $\rho^\ast\!\approx\!%.1f$" % rstar, fontsize=7, loc="left", pad=3)
+    ax.set_title(r"(d) transition, $\rho^\ast\!\approx\!%.2f$" % rstar, fontsize=7, loc="left", pad=3)
     ax.set_xlim(r.min(), r.max())
 
     for a in fig.axes:
