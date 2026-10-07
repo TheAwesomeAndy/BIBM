@@ -9,7 +9,7 @@
     recurrence.
 (d) Damage-spreading order parameter versus rho (E1): mean normalized Hamming distance
     after a one-spike flip; the measured transition and the operating point rho = 0.9 are
-    marked, with the linear stability boundary rho = 1 for reference.
+    marked, with the echo-state heuristic rho = 1 for reference.
 
 Replaces the earlier eigenvalue-spectrum and state-separation panels, which reviewers noted
 were properties of the construction rather than results. Reads the restricted SHAPE pickle
@@ -56,10 +56,14 @@ def trace(x, rho=0.9):
 
 
 def transition(dmg):
-    """Smallest rho at which the one-spike flip leaves damage above half its grid maximum."""
+    """rho at which the damage, linearly interpolated between grid points, reaches half its maximum."""
     keys = sorted(dmg, key=float)
     r = np.array([float(k) for k in keys]); v = np.array([dmg[k] for k in keys])
-    return float(r[np.argmax(v >= 0.5 * v.max())]), r, v
+    i = int(np.argmax(v >= 0.5 * v.max()))
+    if i == 0:
+        return float(r[0]), r, v
+    rstar = r[i - 1] + (0.5 * v.max() - v[i - 1]) / (v[i] - v[i - 1]) * (r[i] - r[i - 1])
+    return float(rstar), r, v
 
 
 def main():
@@ -85,7 +89,7 @@ def main():
     ax.set_title("(a) LIF spike raster", fontsize=7, loc="left", pad=3)
 
     ax = fig.add_subplot(gs[0, 1], projection="3d")
-    ax.set_box_aspect(None, zoom=1.0)   # color runs from onset (dark) to the end of the epoch (light)
+    ax.set_box_aspect(None, zoom=1.0)   # color runs from epoch start (dark) to the end of the epoch (light)
     tn = np.linspace(0, 1, X.shape[1])
     for c, mk in zip((0, 1, 2), ("o", "s", "^")):
         P = pca.transform(tr[c][1]); pts = P.reshape(-1, 1, 3)
@@ -126,7 +130,7 @@ def main():
     ax.text(0.04, 0.90, "ordered", transform=ax.transAxes, fontsize=5.5)
     ax.text(0.96, 0.06, "irregular", transform=ax.transAxes, fontsize=5.5, ha="right")
     ax.set_xlabel(r"spectral radius $\rho$", labelpad=1); ax.set_ylabel("damage after one-spike flip", labelpad=1)
-    ax.set_title(r"(d) transition, $\rho^\ast\!\approx\!%.1f$" % rstar, fontsize=7, loc="left", pad=3)
+    ax.set_title(r"(d) transition, $\rho^\ast\!\approx\!%.2f$" % rstar, fontsize=7, loc="left", pad=3)
     ax.set_xlim(r.min(), r.max())
 
     for a in fig.axes:

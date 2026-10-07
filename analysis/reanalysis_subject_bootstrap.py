@@ -44,6 +44,9 @@ FILLS = ["zero", "mean", "knn", "spatial"]
 N_BOOT = 4000
 FS = 256  # Hz
 # ERP windows (ms) -> sample indices on the 256-sample post-stimulus epoch.
+# Windows are in sample-index milliseconds (sample / 256 Hz), measured from the FIRST sample of
+# X_ds, which is 200 ms before stimulus onset (X_ds == raw[0:1024:4]; onset at raw sample 205,
+# X_ds sample 51). Relative to onset they span about -120..0, 50..250 and 250..600 ms.
 ERP_WINDOWS_MS = [(80, 200), (250, 450), (450, 800)]
 
 
