@@ -1,0 +1,121 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="850" viewBox="0 0 1600 850">
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L10,4 L0,8 Z" fill="#5f6b7a"/>
+    </marker>
+    <style><![CDATA[
+      .title{font:700 39px Arial,Helvetica,sans-serif;fill:#17212b;letter-spacing:.5px}
+      .subtitle{font:400 23px Arial,Helvetica,sans-serif;fill:#5f6b7a}
+      .hblue{font:700 25px Arial,Helvetica,sans-serif;fill:#2b6cb0}
+      .hpurple{font:700 25px Arial,Helvetica,sans-serif;fill:#6b46c1}
+      .horange{font:700 25px Arial,Helvetica,sans-serif;fill:#c05621}
+      .hred{font:700 21px Arial,Helvetica,sans-serif;fill:#b83232}
+      .hgreen{font:700 21px Arial,Helvetica,sans-serif;fill:#2f855a}
+      .hink{font:700 25px Arial,Helvetica,sans-serif;fill:#17212b}
+      .body{font:400 19px Arial,Helvetica,sans-serif;fill:#17212b}
+      .small{font:400 16px Arial,Helvetica,sans-serif;fill:#5f6b7a}
+      .tiny{font:400 14px Arial,Helvetica,sans-serif;fill:#5f6b7a}
+      .math{font:400 22px Georgia,'Times New Roman',serif;fill:#17212b}
+      .maths{font:400 18px Georgia,'Times New Roman',serif;fill:#17212b}
+      .arrow{stroke:#5f6b7a;stroke-width:4;fill:none;marker-end:url(#arrow)}
+    ]]></style>
+  </defs>
+
+  <rect x="0" y="0" width="1600" height="850" fill="#ffffff"/>
+  <text x="800" y="58" text-anchor="middle" class="title">Operator view of affective-ERP representation evaluation</text>
+  <text x="800" y="94" text-anchor="middle" class="subtitle">Rankings are properties of the representation, the channel-loss convention, and the scoring rule</text>
+
+  <rect x="55" y="130" width="380" height="235" rx="22" fill="#eef4fb" stroke="#b9d3ee" stroke-width="3"/>
+  <text x="92" y="164" class="hblue">A. Observation model</text>
+  <text x="230" y="209" text-anchor="middle" class="math">xi<tspan baseline-shift="sub" font-size="15">t+1</tspan> = f<tspan baseline-shift="sub" font-size="15">theta</tspan>(xi<tspan baseline-shift="sub" font-size="15">t</tspan>,u<tspan baseline-shift="sub" font-size="15">t</tspan>) + eta<tspan baseline-shift="sub" font-size="15">t</tspan></text>
+  <text x="230" y="245" text-anchor="middle" class="math">x<tspan baseline-shift="sub" font-size="15">t</tspan> = H xi<tspan baseline-shift="sub" font-size="15">t</tspan> + eps<tspan baseline-shift="sub" font-size="15">t</tspan></text>
+  <path d="M105,318 C160,306 175,267 233,274 C276,280 292,322 366,305" fill="none" stroke="#2b6cb0" stroke-width="4"/>
+  <path d="M105,339 C169,336 191,286 242,287 C291,289 298,323 366,318" fill="none" stroke="#c05621" stroke-width="4"/>
+  <path d="M105,348 C169,334 190,328 236,327 C284,326 306,349 366,343" fill="none" stroke="#2c7a7b" stroke-width="4"/>
+  <g fill="#ffffff" stroke="#2b6cb0" stroke-width="2">
+    <circle cx="118" cy="278" r="7"/><circle cx="153" cy="278" r="7"/><circle cx="188" cy="278" r="7"/><circle cx="223" cy="278" r="7"/><circle cx="258" cy="278" r="7"/>
+    <circle cx="118" cy="297" r="7"/><circle cx="153" cy="297" r="7"/><circle cx="188" cy="297" r="7"/><circle cx="223" cy="297" r="7"/><circle cx="258" cy="297" r="7"/>
+    <circle cx="118" cy="316" r="7"/><circle cx="153" cy="316" r="7"/><circle cx="188" cy="316" r="7"/><circle cx="223" cy="316" r="7"/><circle cx="258" cy="316" r="7"/>
+  </g>
+  <text x="277" y="329" text-anchor="middle" class="small">34 channels x time</text>
+
+  <rect x="480" y="105" width="560" height="295" rx="22" fill="#f7f4fb" stroke="#d5c7ef" stroke-width="3"/>
+  <text x="522" y="145" class="hpurple">B. Competing representation operators</text>
+  <rect x="525" y="160" width="150" height="77" rx="11" fill="#ffffff" stroke="#2c7a7b" stroke-width="3"/>
+  <rect x="690" y="160" width="150" height="77" rx="11" fill="#ffffff" stroke="#c05621" stroke-width="3"/>
+  <rect x="855" y="160" width="150" height="77" rx="11" fill="#ffffff" stroke="#6b46c1" stroke-width="3"/>
+  <text x="600" y="192" text-anchor="middle" class="hgreen">Band</text><text x="600" y="217" text-anchor="middle" class="hgreen">power</text>
+  <text x="765" y="192" text-anchor="middle" class="horange">ERP</text><text x="765" y="217" text-anchor="middle" class="horange">windows</text>
+  <text x="930" y="192" text-anchor="middle" class="hpurple">Fixed LIF</text><text x="930" y="217" text-anchor="middle" class="hpurple">reservoir</text>
+  <g fill="#e7f0f7" stroke="#2b6cb0" stroke-width="2">
+    <rect x="560" y="292" width="31" height="54"/><rect x="607" y="278" width="31" height="68"/><rect x="654" y="276" width="31" height="70"/><rect x="701" y="290" width="31" height="56"/><rect x="748" y="300" width="31" height="46"/><rect x="795" y="303" width="31" height="43"/>
+  </g>
+  <g fill="#ffffff" stroke="#6b46c1" stroke-width="2.2">
+    <circle cx="910" cy="270" r="8"/><circle cx="935" cy="252" r="8"/><circle cx="966" cy="273" r="8"/><circle cx="986" cy="312" r="8"/><circle cx="955" cy="347" r="8"/><circle cx="911" cy="337" r="8"/><circle cx="889" cy="302" r="8"/><circle cx="1010" cy="285" r="8"/><circle cx="1028" cy="345" r="8"/>
+  </g>
+  <g stroke="#d6d0e8" stroke-width="2">
+    <line x1="910" y1="270" x2="966" y2="273"/><line x1="966" y1="273" x2="986" y2="312"/><line x1="986" y1="312" x2="955" y2="347"/><line x1="955" y1="347" x2="911" y2="337"/><line x1="889" y1="302" x2="935" y2="252"/><line x1="966" y1="273" x2="1028" y2="345"/>
+  </g>
+  <text x="745" y="363" text-anchor="middle" class="math">Phi(X) = phi<tspan baseline-shift="sub" font-size="15">PCA</tspan>( BSC<tspan baseline-shift="sub" font-size="15">6</tspan>( LIF(X) ) )</text>
+  <text x="745" y="388" text-anchor="middle" class="small">fixed, label-free mapping; only the readout is trained</text>
+
+  <rect x="1085" y="105" width="460" height="295" rx="22" fill="#fff7ed" stroke="#f0c7a8" stroke-width="3"/>
+  <text x="1130" y="145" class="horange">C. Channel-loss convention</text>
+  <g stroke="#cbd5df" stroke-width="1.6" fill="#ffffff">
+    <rect x="1155" y="210" width="20" height="12"/><rect x="1180" y="210" width="20" height="12"/><rect x="1205" y="210" width="20" height="12"/><rect x="1230" y="210" width="20" height="12"/><rect x="1255" y="210" width="20" height="12"/><rect x="1280" y="210" width="20" height="12"/>
+    <rect x="1155" y="228" width="20" height="12"/><rect x="1180" y="228" width="20" height="12"/><rect x="1205" y="228" width="20" height="12"/><rect x="1230" y="228" width="20" height="12"/><rect x="1255" y="228" width="20" height="12"/><rect x="1280" y="228" width="20" height="12"/>
+    <rect x="1155" y="246" width="20" height="12"/><rect x="1180" y="246" width="20" height="12"/><rect x="1205" y="246" width="20" height="12"/><rect x="1230" y="246" width="20" height="12"/><rect x="1255" y="246" width="20" height="12"/><rect x="1280" y="246" width="20" height="12"/>
+    <rect x="1155" y="264" width="20" height="12"/><rect x="1180" y="264" width="20" height="12"/><rect x="1205" y="264" width="20" height="12"/><rect x="1230" y="264" width="20" height="12"/><rect x="1255" y="264" width="20" height="12"/><rect x="1280" y="264" width="20" height="12"/>
+  </g>
+  <g stroke="#b83232" stroke-width="1.8" fill="#fde2e2">
+    <rect x="1205" y="210" width="20" height="12"/><rect x="1230" y="210" width="20" height="12"/><rect x="1205" y="228" width="20" height="12"/><rect x="1230" y="228" width="20" height="12"/><rect x="1205" y="246" width="20" height="12"/><rect x="1230" y="246" width="20" height="12"/><rect x="1205" y="264" width="20" height="12"/><rect x="1230" y="264" width="20" height="12"/>
+  </g>
+  <text x="1233" y="314" text-anchor="middle" class="hred">drop block S</text>
+  <path d="M1314,245 L1370,245" class="arrow" stroke="#c05621"/>
+  <rect x="1378" y="168" width="130" height="70" rx="10" fill="#ffffff" stroke="#b83232" stroke-width="3"/>
+  <text x="1443" y="198" text-anchor="middle" class="hred">zero fill</text>
+  <text x="1443" y="223" text-anchor="middle" class="maths">z<tspan baseline-shift="sub" font-size="13">S</tspan> = -mu<tspan baseline-shift="sub" font-size="13">S</tspan>/sigma<tspan baseline-shift="sub" font-size="13">S</tspan></text>
+  <rect x="1378" y="258" width="130" height="70" rx="10" fill="#ffffff" stroke="#2f855a" stroke-width="3"/>
+  <text x="1443" y="288" text-anchor="middle" class="hgreen">mean fill</text>
+  <text x="1443" y="313" text-anchor="middle" class="maths">z<tspan baseline-shift="sub" font-size="13">S</tspan> = 0</text>
+  <text x="1320" y="357" text-anchor="middle" class="maths">gap: z<tspan baseline-shift="sub" font-size="13">S</tspan><tspan baseline-shift="super" font-size="13">zero</tspan> - z<tspan baseline-shift="sub" font-size="13">S</tspan><tspan baseline-shift="super" font-size="13">mean</tspan> = -D<tspan baseline-shift="sub" font-size="13">sigma,S</tspan><tspan baseline-shift="super" font-size="13">-1</tspan> mu<tspan baseline-shift="sub" font-size="13">S</tspan></text>
+  <text x="1320" y="384" text-anchor="middle" class="small">if mu approx 0, fill-rule dependence nearly vanishes</text>
+
+  <path d="M440,250 L474,250" class="arrow"/>
+  <path d="M1042,250 L1078,250" class="arrow"/>
+  <path d="M800,405 L800,454" class="arrow"/>
+
+  <rect x="55" y="455" width="1490" height="305" rx="22" fill="#f6f8fa" stroke="#c8d0d9" stroke-width="3"/>
+  <text x="100" y="498" class="hink">D. Scoring rule and subject-level inference</text>
+  <rect x="95" y="535" width="430" height="170" rx="14" fill="#ffffff" stroke="#d3d9e0" stroke-width="2.5"/>
+  <text x="145" y="574" class="hred">Accuracy-floor effect</text>
+  <line x1="155" y1="680" x2="472" y2="680" stroke="#9aa6b2" stroke-width="2"/>
+  <line x1="155" y1="585" x2="155" y2="690" stroke="#9aa6b2" stroke-width="2"/>
+  <line x1="155" y1="645" x2="472" y2="645" stroke="#b9c2ce" stroke-width="2" stroke-dasharray="6,4"/>
+  <text x="139" y="650" text-anchor="end" class="tiny">chance</text>
+  <rect x="225" y="600" width="30" height="45" fill="#6b46c1" opacity=".82"/><rect x="275" y="604" width="30" height="41" fill="#6b46c1" opacity=".82"/>
+  <rect x="380" y="584" width="30" height="61" fill="#c05621" opacity=".82"/><rect x="430" y="598" width="30" height="47" fill="#c05621" opacity=".82"/>
+  <text x="265" y="698" text-anchor="middle" class="small">near-floor encoder</text><text x="420" y="698" text-anchor="middle" class="small">stronger encoder</text>
+
+  <rect x="548" y="535" width="430" height="170" rx="14" fill="#ffffff" stroke="#d3d9e0" stroke-width="2.5"/>
+  <text x="600" y="574" class="horange">Fill-rule non-invariance</text>
+  <text x="763" y="611" text-anchor="middle" class="body">same information, different coordinate origin</text>
+  <text x="763" y="638" text-anchor="middle" class="small">clean invariant; dropout score moves</text>
+  <line x1="620" y1="665" x2="906" y2="665" stroke="#9aa6b2" stroke-width="3"/>
+  <circle cx="670" cy="702" r="11" fill="#b83232"/><circle cx="763" cy="665" r="11" fill="#2f855a"/><circle cx="870" cy="665" r="11" fill="#6b46c1"/>
+  <text x="670" y="725" text-anchor="middle" class="small" fill="#b83232">zero</text><text x="763" y="707" text-anchor="middle" class="small" fill="#2f855a">mean</text><text x="870" y="707" text-anchor="middle" class="small" fill="#6b46c1">centered</text>
+
+  <rect x="1002" y="535" width="495" height="170" rx="14" fill="#ffffff" stroke="#d3d9e0" stroke-width="2.5"/>
+  <text x="1050" y="574" class="hblue">Primary comparison</text>
+  <g fill="#eaf2fb" stroke="#2b6cb0" stroke-width="2">
+    <circle cx="1085" cy="612" r="13"/><circle cx="1114" cy="612" r="13"/><circle cx="1143" cy="612" r="13"/><circle cx="1172" cy="612" r="13"/><circle cx="1201" cy="612" r="13"/>
+    <circle cx="1100" cy="632" r="13"/><circle cx="1129" cy="632" r="13"/><circle cx="1158" cy="632" r="13"/><circle cx="1187" cy="632" r="13"/><circle cx="1216" cy="632" r="13"/>
+  </g>
+  <text x="1150" y="674" text-anchor="middle" class="small">resample subjects, not folds</text>
+  <line x1="1270" y1="630" x2="1450" y2="630" stroke="#c05621" stroke-width="4"/><line x1="1270" y1="616" x2="1270" y2="644" stroke="#c05621" stroke-width="4"/><line x1="1450" y1="616" x2="1450" y2="644" stroke="#c05621" stroke-width="4"/><circle cx="1360" cy="630" r="10" fill="#c05621"/>
+  <line x1="1240" y1="668" x2="1478" y2="668" stroke="#9aa6b2" stroke-width="2"/><line x1="1322" y1="657" x2="1322" y2="679" stroke="#9aa6b2" stroke-width="2"/>
+  <text x="1360" y="700" text-anchor="middle" class="body">paired Delta BA: ERP-window minus reservoir</text>
+
+  <rect x="285" y="778" width="1030" height="48" rx="13" fill="#17212b"/>
+  <text x="800" y="810" text-anchor="middle" style="font:700 19px Arial,Helvetica,sans-serif;fill:#fff">Reporting standard: absolute BA + subject uncertainty + varied fill rules + augmentation state</text>
+</svg>

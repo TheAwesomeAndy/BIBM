@@ -1,0 +1,13 @@
+% Optional theory figure for main_bibm2026.tex.
+% The asset is stored as manuscript/figures/imported/fig_theory_protocol.svg.
+% For pdflatex, convert the SVG to PDF first, for example:
+% inkscape manuscript/figures/imported/fig_theory_protocol.svg --export-type=pdf --export-filename=manuscript/figures/imported/fig_theory_protocol.pdf
+%
+% Suggested placement: after the contribution list in the Introduction, or at the start of Methods.
+
+\begin{figure*}[t]
+\centering
+\includegraphics[width=\textwidth]{fig_theory_protocol.pdf}
+\caption{Operator view of affective-ERP representation evaluation. Trial-averaged scalp observations are treated as noisy measurements of an unobserved neural state trajectory, then mapped through fixed representation operators or a trained model. Channel loss is not a neutral evaluation step: zero fill and train-mean fill induce different standardized coordinates for non-centered features, whereas a centered reservoir embedding is nearly invariant to the fill convention. The primary comparison is therefore absolute balanced accuracy with subject-level uncertainty and paired encoder differences, with retention ratios treated only as secondary diagnostics.}
+\label{fig:theory_protocol}
+\end{figure*}
