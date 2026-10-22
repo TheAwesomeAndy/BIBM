@@ -34,7 +34,7 @@ A final pass aligned every statement about the reservoir's dynamics with what th
 5. Sec. IV-B states that the subject-bootstrap intervals are conditional on the sampled electrode masks (one draw per seed and fold), the fitted models, and the single reservoir weight draw.
 6. Sec. V-D is retitled "External Check of the Fill-Rule Effect", matching what the DEAP experiment tests.
 
-To keep the body on six pages, Figs. 1 to 4 are printed 2 to 7% narrower (smallest printed text about 5.3 pt in Figs. 3 and 4, 5.4 pt in Fig. 2, and 5.5 pt in Fig. 1) and a few sentences in Related Work, Sec. V-C, Sec. V-D, the Discussion, the Limitations and the Ethics statement were shortened without changing their content.
+To keep the body on six pages, Figs. 1 to 4 are printed 2 to 7% narrower (smallest printed text about 5.3 pt in Figs. 3 and 4, 5.4 pt in Fig. 2, and 5.5 pt in Fig. 1) and a few sentences in Related Work, Sec. V-C, Sec. V-D, the Discussion, the Limitations and the closing data statement were shortened, and the closing statement is now titled Data Availability, without the review-board clause without changing their content.
 
 To keep the body within six pages, the kNN and spatial per-encoder point values at 30% dropout are now carried by the paired differences in Sec. V-B rather than listed separately, and a few sentences that duplicated Methods statements were removed. The four figures are printed at sizes that keep their smallest text at or above 5.5 pt.
 
