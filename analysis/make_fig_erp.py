@@ -88,7 +88,7 @@ def main():
 
     for a in (ax0, ax1, ax2):
         a.tick_params(length=2, pad=1.5)
-    fig.savefig(OUT, bbox_inches="tight", pad_inches=0.01)
+    fig.savefig(OUT, bbox_inches="tight", pad_inches=0.01, dpi=300)   # heat map rasterized at >= 300 dpi (IEEE)
     print(f"[fig] wrote {OUT}; affect-discriminative channel = {ch}")
 
 
