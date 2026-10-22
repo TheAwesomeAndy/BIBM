@@ -1,3 +1,4 @@
+\pdfminorversion=4 % IEEE camera-ready setting: Acrobat 5.0 (PDF 1.4) compatibility
 \documentclass[conference]{IEEEtran}
 \IEEEoverridecommandlockouts
 
@@ -67,8 +68,15 @@ Let $X_s^{(c)}\in\R^{C\times T}$ denote the trial-averaged ERP observation for s
 \end{equation}
 where $\xi_t$ is the latent neural state, $H$ the scalp measurement operator, and $\epsilon_t$ measurement and preprocessing noise; the signal-level perturbations below act on this model (Sec.~\ref{sec:rawsignal}).
 
+\begin{figure*}[t]
+\centering
+\includegraphics[width=0.94\textwidth]{fig_reservoir_dyn.pdf}
+\caption{The fixed LIF reservoir as a dynamical system, linked to accuracy. (a)~Spike raster for one condition (shaded $=$ the $t\in[10,70)$ window, about $-160$ to $+73$~ms around onset at step $51$). (b)~Population state-space trajectory (first three principal components of the membrane state), from epoch start (dark) to end (light), for the three conditions; the trajectories largely overlap. (c)~Subject-level BA ($95\%$ CI) versus spectral radius $\rho$, clean and with $30\%$ of electrodes removed; $\rho=0$ removes the recurrence, and the dash-dot line marks the pre-specified $\rho=0.9$. (d)~Damage-spreading order parameter versus $\rho$; the dashed line marks its half-maximum crossing $\rho^\ast\approx0.82$, across which the mean firing rate doubles (Sec.~\ref{sec:clean}); dash-dot $=$ $\rho=0.9$, dotted $=$ the echo-state heuristic $\rho=1$.}
+\label{fig:resdyn}
+\end{figure*}
+
 \subsection{Spiking Reservoir Encoding}
-For each electrode trace, the signal is passed through a fixed LIF reservoir of $256$ neurons with recurrent weights $W$ scaled to spectral radius $\rho=0.9$ (just above the half-maximum damage crossing $\rho^\ast\approx0.82$; Fig.~\ref{fig:resdyn}d), input weights $W_{\mathrm{in}}$, leak parameter $\beta=0.05$, and firing threshold $\vartheta=0.5$:
+For each electrode trace, the signal is passed through ARSPI-Net's temporal encoding stage~\cite{lane2023arspi,lane2024arspi}, a fixed LIF reservoir of $256$ neurons with recurrent weights $W$ scaled to spectral radius $\rho=0.9$ (just above the half-maximum damage crossing $\rho^\ast\approx0.82$; Fig.~\ref{fig:resdyn}d), input weights $W_{\mathrm{in}}$, leak parameter $\beta=0.05$, and firing threshold $\vartheta=0.5$:
 \begin{align}
     v_{t} &= \big[(1-\beta)\,(1-z_{t-1})\odot v_{t-1} + W z_{t-1} + W_{\mathrm{in}}x_t\big]_+, \\
     z_{t} &= \Ind[v_{t}\geq \vartheta],
@@ -81,12 +89,6 @@ E=\phi_{\mathrm{PCA}}\!\big([b_1,\dots,b_6]\big)=\Phi(X),
 \end{equation}
 so $E=\Phi(X)$ is a fixed, label-free representation. The PCA basis is fitted, unsupervised, on the training subjects of each fold only; fitting it once over all subjects (transductive with respect to subject inclusion) is reported as a sensitivity check in Sec.~\ref{sec:clean}. A single-bin control (BSC$_1$, total spike count in the window) uses the identical pipeline. The window lies mostly before onset and excludes the later components the ERP-window baseline sees; because every epoch is z-scored over its full length, pre-stimulus samples also carry an offset set by the post-stimulus signal, so we do not attribute the reservoir's accuracy to a specific evoked component.
 
-\begin{figure*}[t]
-\centering
-\includegraphics[width=0.94\textwidth]{fig_reservoir_dyn.pdf}
-\caption{The fixed LIF reservoir as a dynamical system, linked to accuracy. (a)~Spike raster for one condition (shaded $=$ the $t\in[10,70)$ window, about $-160$ to $+73$~ms around onset at step $51$). (b)~Population state-space trajectory (first three principal components of the membrane state), from epoch start (dark) to end (light), for the three conditions; the trajectories largely overlap. (c)~Subject-level BA ($95\%$ CI) versus spectral radius $\rho$, clean and with $30\%$ of electrodes removed; $\rho=0$ removes the recurrence, and the dash-dot line marks the pre-specified $\rho=0.9$. (d)~Damage-spreading order parameter versus $\rho$; the dashed line marks its half-maximum crossing $\rho^\ast\approx0.82$, across which the mean firing rate doubles (Sec.~\ref{sec:clean}); dash-dot $=$ $\rho=0.9$, dotted $=$ the echo-state heuristic $\rho=1$.}
-\label{fig:resdyn}
-\end{figure*}
 
 
 
@@ -251,7 +253,7 @@ We suggest a minimal reporting standard for EEG robustness studies: absolute acc
 \section{Conclusion}
 Channel-dropout robustness rankings for affective-ERP representations depend on the scoring protocol: raw retention has a chance floor, zero-fill depends on the coordinate origin, and trained models need their augmentation state made explicit. Zero-fill halves the measured lead of the strongest fixed encoder, the near-centered spiking reservoir makes these effects visible without being the most accurate encoder, and the fill-rule effect replicates on DEAP.
 
-\textbf{Ethics and Data Availability.} SHAPE was collected by the Stony Brook University Laboratory for Clinical Affective Neuroscience under its IRB oversight (data requests: \cite{shape}); DEAP is public~\cite{koelstra2012deap}.
+\textbf{Data Availability.} SHAPE was collected by the Stony Brook University Laboratory for Clinical Affective Neuroscience (data requests: \cite{shape}); DEAP is public~\cite{koelstra2012deap}.
 
 \IEEEtriggeratref{16}
 \begin{thebibliography}{99}

@@ -34,7 +34,7 @@ A final pass aligned every statement about the reservoir's dynamics with what th
 5. Sec. IV-B states that the subject-bootstrap intervals are conditional on the sampled electrode masks (one draw per seed and fold), the fitted models, and the single reservoir weight draw.
 6. Sec. V-D is retitled "External Check of the Fill-Rule Effect", matching what the DEAP experiment tests.
 
-To keep the body on six pages, Figs. 1 to 4 are printed 2 to 7% narrower (smallest printed text about 5.3 pt in Figs. 3 and 4, 5.5 pt or larger elsewhere) and a few sentences in Related Work, Sec. V-C, Sec. V-D, the Discussion, the Limitations and the Ethics statement were shortened without changing their content.
+To keep the body on six pages, Figs. 1 to 4 are printed 2 to 7% narrower (smallest printed text about 5.3 pt in Figs. 3 and 4, 5.4 pt in Fig. 2, and 5.5 pt in Fig. 1) and a few sentences in Related Work, Sec. V-C, Sec. V-D, the Discussion, the Limitations and the closing data statement were shortened, and the closing statement is now titled Data Availability, without the review-board clause without changing their content.
 
 To keep the body within six pages, the kNN and spatial per-encoder point values at 30% dropout are now carried by the paired differences in Sec. V-B rather than listed separately, and a few sentences that duplicated Methods statements were removed. The four figures are printed at sizes that keep their smallest text at or above 5.5 pt.
 
@@ -63,6 +63,10 @@ The reviewers' requests R2-1 through R2-3 change the estimator (subject-level in
 | Table I macro-F1 and AUC for EEGNet and BSC1 | reported | BA only; BSC1 moved into the text | only committed outputs are reported, and the committed EEGNet and BSC1 runs export BA |
 
 The pipeline schematic (reviewed Fig. 1) is removed to keep the body within six pages after the additions above; the remaining figures are printed at sizes that keep their smallest text at or above 5.5 pt.
+
+## Final PDF settings
+
+The PDF is built at version 1.4 (\pdfminorversion=4), matching the IEEE camera-ready setting "Acrobat 5.0 compatibility". Fig. 2's heat map and color bar were rasterized at matplotlib's default 100 dpi (about 92 dpi as printed); they are resampled 4x in place by `analysis/upsample_fig_erp_raster.py` (about 370 dpi as printed, visually unchanged, no added information), and `analysis/make_fig_erp.py` now saves at 300 dpi for the next local regeneration from the restricted data. No text, value, or figure content changed.
 
 Sincerely,
 
