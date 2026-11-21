@@ -52,10 +52,12 @@ synthetic input, and requires bitwise-equal results. Result on 2026-11-21:
 141 of 141 outputs equal.
 
 Limit: the comparison uses synthetic signals. Equivalence on the restricted
-EEG data has not been shown, because that data was not reachable. Scripts with
-no synthetic test path (`experiment_eegnet_signal.py`, `deap_replication.py`,
-the figure scripts, `experiment_controls.py`,
-`experiment_signal_perturbations.py`) were not edited. The last two reach the
+EEG data has not been shown, because that data was not reachable. Five kinds
+of script were not edited by the refactor: `experiment_eegnet_signal.py`,
+`deap_replication.py`, the figure scripts, `experiment_controls.py`, and
+`experiment_signal_perturbations.py`. The EEGNet and DEAP scripts are
+byte-identical to the versions that produced the accepted results, and now
+have their own characterization tests. The last two reach the
 shared code only through functions the comparison covers.
 
 Verify from the repository root:

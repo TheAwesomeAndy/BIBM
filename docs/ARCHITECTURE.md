@@ -61,7 +61,7 @@ import its band-power and ERP-window functions. Do not delete or "clean up" it.
 | LIF reservoir update loop | `core.lif_step` (used by `core.reservoir_bsc6` and `EC.damage`); own loops remain in `regen_reservoir_embedding.regen` and `experiment2_rawsignal.bsc6_all` | **Partly consolidated.** The two remaining loops add the currents in a different floating-point order, leak + (input + recurrent) against (leak + input) + recurrent. All forms give bitwise-equal spike counts on the synthetic fixture, and a mutant with the order swapped changed none of 141 outputs. That is not proof for the EEG data, so they stay as written |
 | Weight initialization | `core.init_weights` | **Consolidated.** The three former copies were bitwise equal; all now call `core` |
 | ERP-window means | `core.erp_window_means` | **Consolidated.** Three former copies with identical arithmetic |
-| Readout fit | `core.fit_readout`, `core.readout_proba`; own copy in `deap_replication.fit_pred` | **Consolidated** for the four SHAPE scripts. The DEAP script is untouched (no test path without DEAP) |
+| Readout fit | `core.fit_readout`, `core.readout_proba`; own copy in `deap_replication.fit_pred` | **Consolidated** for the four SHAPE scripts. The DEAP script keeps its own copy: it is byte-identical to the version that produced the accepted DEAP values, and it returns labels, not probabilities |
 | Subject bootstrap | `RB.subject_bootstrap` (seed 12345), `E2S.subj_boot` (seed 7) | **Not interchangeable.** Different RNG seeds give different intervals (a test pins the difference) |
 | PCA embedding of training codes | `fit_transform` in `regen` and `E2S`; `fit` then `transform` elsewhere | **Not interchangeable.** See `docs/CODE_AUDIT.md` A10 |
 | Constants (`SEEDS`, reservoir parameters, windows, `N_BOOT`) | `core`; own copies remain in `experiment_eegnet_signal.py` (`SEEDS`), `deap_replication.py` (its own protocol), `perturbations.py` (`FS`) | **Consolidated** for the four SHAPE scripts; the rest untouched |
@@ -94,7 +94,7 @@ consolidated row is `tests/test_refactor_equivalence.py` (`docs/BASELINE.md`).
 | `scripts/check_forbidden_phrases.py`, `tools/check_path_markers.py` | harness | Phrase and path hygiene |
 | `docs/baseline/*.sha256` | project | Accepted artifacts unchanged |
 | `tests/test_refactor_equivalence.py` + `tests/equivalence_driver.py` | project | Working tree against the baseline commit, bitwise, on synthetic input. Needs full git history. About two minutes |
-| `tests/` (`make test`) | project | Baseline integrity, reservoir, perturbations, features, fills, protocol, bootstrap, and every cell of Tables I to III |
+| `tests/` (`make test`) | project | Baseline integrity, reservoir, perturbations, features, fills, protocol, bootstrap, every cell of Tables I to III, the EEGNet and DEAP outputs against the paper, and the EEGNet (with torch) and DEAP code |
 
 Current gate status, including two gates that fail for known reasons, is in
 `docs/HARNESS_OVERRIDES.md`.

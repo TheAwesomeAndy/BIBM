@@ -45,6 +45,20 @@ E5 and S1 need the SHAPE pickle; DEAP needs the DEAP release. Run times are in
 Note on DEAP: it uses a within-subject protocol by design, stated in the
 paper. It is not a deviation from the subject-grouped SHAPE protocol.
 
+## Run record for the accepted experiments
+
+Every accepted experiment was run by the author for the camera-ready, and its
+output is committed. "Not re-run" elsewhere in these docs refers only to the
+modernization sessions, which had no access to the restricted data. It never
+means an experiment was not run.
+
+| ID | Output committed | Evidence that it ran and reproduces (historical) | Tests in this repository |
+|---|---|---|---|
+| E1, E2, E4, E5 | 2026-10-01, PR #35 | `docs/CODE_AUDIT.md` section 3: anchors and cross-script identities | `tests/test_baseline_integrity.py`, `tests/test_manuscript_tables.py` |
+| **E3 (EEGNet)** | `e3_eegnet_signal.json`, 2026-10-01, PR #35 | Audit section 3: a rerun gave every BA and paired value identical to the first run (CPU, fixed seeds, two threads). Audit A16: the run's imported perturbation module matched the committed one. An earlier run from June 2026 (PR #17) is kept as `eegnet.json` and `eegnet_aug.json`; it is the "submitted" column of `manuscript/cover_note.md` | `tests/test_eegnet_and_deap_outputs.py` (every EEGNet number in Tables I to III and the Training effect paragraph; shared draws with E4), `tests/test_eegnet_code.py` (architecture, augmentation, deterministic training; needs torch) |
+| **DEAP** | `deap_replication_v2.json`, 2026-10-01, PR #35 | Audit section 3: all ten values reproduce the original run (`deap_replication.json`, July 2026, PR #22) to within 4.8e-05 | `tests/test_eegnet_and_deap_outputs.py` (audit anchors, the ten-value comparison, every number in Sec. V-D and the Fig. 4 caption), `tests/test_deap_code.py` (estimator, loader, fills, within-subject evaluation) |
+| S1 | `subject_bootstrap_reanalysis.json` | Audit section 3: anchor 0.4626 reproduced | `tests/test_baseline_integrity.py` |
+
 ## Figures
 
 | Figure | Script | Inputs | Needs restricted data |

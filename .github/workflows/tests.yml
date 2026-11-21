@@ -19,5 +19,7 @@ jobs:
           python-version: "3.13"
       - name: Install pinned dependencies
         run: pip install "numpy==2.4.6" "scikit-learn==1.9.1" "scipy==1.18.1" "pytest>=8"
+      - name: Install torch (CPU) for the EEGNet code tests
+        run: pip install torch --index-url https://download.pytorch.org/whl/cpu
       - name: Baseline checksums, wording gate, tests
         run: make check

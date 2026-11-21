@@ -34,7 +34,7 @@ encoding stage of ARSPI-Net, studied on its own.
 | Pooled (transductive) PCA sensitivity check | Sec. V-A | `regen_reservoir_embedding.py` then `reanalysis_subject_bootstrap.py` | none | [H] 0.485 [0.447, 0.521] pooled against 0.487 [0.447, 0.523] train-only (`CLAUDE.md`). Required wording is in `CLAUDE.md` | `tests/test_baseline_integrity.py` (values), `tests/test_reservoir.py` (pooled embedding) |
 | Baseline A0: band power, Welch, nperseg 256, bands 1-4/4-8/8-13/13-30/30-45 Hz, trapezoid; 170 features | Sec. III-C | `experiment2_rawsignal.bandpower_all` | none on SHAPE (DEAP uses a different, log-mean estimator) | [H] A3: the pickle's `conv_feats` is not used | `tests/test_features_and_fills.py` |
 | Baseline A0e: ERP-window means, sample-index windows 80-200, 250-450, 450-800 ms; 102 features | Sec. III-C | `core.erp_window_means` | none | [H] A18 for the onset-relative labels | `tests/test_features_and_fills.py` |
-| EEGNet-8,2 comparison, with and without train-time augmentation | Sec. V-C | `experiment_eegnet_signal.py` | none | [H] deterministic rerun, audit section 3 | none |
+| EEGNet-8,2 comparison, with and without train-time augmentation | Sec. V-C | `experiment_eegnet_signal.py` | none | [H] run for the camera-ready; deterministic rerun, audit section 3 and A16; output `e3_eegnet_signal.json` | `tests/test_eegnet_and_deap_outputs.py` (outputs against the paper), `tests/test_eegnet_code.py` (code, needs torch) |
 | Validation protocol: `StratifiedGroupKFold(5, shuffle)`, seeds 42 to 46, subject groups, train-only `StandardScaler`, balanced L2 logistic readout | Sec. IV-B (`sec:validation`) | `core.fit_readout`, constants in `core`; the split loops are in each experiment | split loops in several scripts | [V] identical settings in every script, by reading | `tests/test_protocol_and_bootstrap.py` |
 | Out-of-fold aggregation: class probabilities summed over the five partitions, then argmax | Sec. IV-B | each experiment's accumulation loop | several | [V] by reading | `tests/test_protocol_and_bootstrap.py` |
 | Subject-level bootstrap: 211 subjects resampled with replacement, three observations kept together, 4000 resamples, percentile interval | Sec. IV-B | `reanalysis_subject_bootstrap.subject_bootstrap`, `paired_diff_ci` | `experiment2_rawsignal.subj_boot` (different seed, superseded output only) | [H] intervals are conditional on masks, models, and the single weight draw, memory #42 | `tests/test_protocol_and_bootstrap.py` |
@@ -46,12 +46,12 @@ encoding stage of ARSPI-Net, studied on its own.
 | Spectral-radius sweep and rho = 0 ablation | Sec. V-A, Fig. 1(c) | `experiment_camera_ready.run_e1` | none | [H] memory #35 | none |
 | Damage-spreading order parameter, rho* about 0.82 by interpolation | Sec. V-A, Fig. 1(d) | `experiment_camera_ready.damage` | none | [H] A19; reading as a rate-associated crossover, memory #38, #42 | `tests/test_reservoir.py` (pinned values on synthetic drives) |
 | Permutation null, PCA component count, BSC1 against BSC6 | Sec. V-A | `experiment_controls.py`, sections 1 to 3 | none | [H] A12; reported as no detected difference, memory #42 | none |
-| External check on DEAP: within-subject band power, fill rules | Sec. V-D (`sec:deap`), Fig. 4(a) | `deap_replication.py` | none | [H] audit section 3 | none |
+| External check on DEAP: within-subject band power, fill rules | Sec. V-D (`sec:deap`), Fig. 4(a) | `deap_replication.py` | none | [H] run for the camera-ready; ten values reproduce the July run to 4.8e-05, audit section 3; output `deap_replication_v2.json` | `tests/test_eegnet_and_deap_outputs.py` (outputs against the paper and audit), `tests/test_deap_code.py` (code) |
 
 Rows that still say "none" have no automated test: the analysed-signal
-preprocessing (upstream), EEGNet (needs torch, not installed in the test
-environment), the proposition 1 centeredness computation, the sweep and
-control drivers, and DEAP. Their `main()` functions need restricted data.
+preprocessing (upstream), the proposition 1 centeredness computation, and the
+sweep and control drivers. No `main()` function is called by any test, because
+each needs restricted data and writes into `outputs/aggregate/`.
 
 ## Open questions carried from the camera-ready
 

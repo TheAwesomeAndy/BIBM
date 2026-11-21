@@ -104,6 +104,10 @@ Read `docs/REPRODUCIBILITY.md`, procedure E, first.
   `manuscript/main_bibm2026.tex`.
 - The tests run on synthetic signals. "Tests pass" means behavior is
   unchanged. It does not mean a result was reproduced on EEG.
+- Every accepted experiment, EEGNet (E3) and DEAP included, was run by the
+  author and its output is committed. "Not re-run" in these docs describes the
+  modernization sessions only. Do not report an accepted experiment as never
+  run; see the Run record in `docs/EXPERIMENT_REGISTRY.md`.
 - `tests/test_baseline_integrity.py::test_accepted_implementation_unchanged`
   fails on any edit to `analysis/*.py`. That is its job. See `docs/BASELINE.md`
   before regenerating the manifest.

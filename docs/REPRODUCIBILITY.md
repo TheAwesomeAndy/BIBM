@@ -40,8 +40,9 @@ bounds only. Treat any environment other than the pinned one as unverified:
 PCA with the randomized solver, the logistic solver, and torch training can
 all shift low-order digits between library versions.
 
-Verified 2026-11-21: with Python 3.13.18 and the three pins above, all 67
-tests pass. The pinned reservoir hash in `tests/golden/` was also reproduced
+Verified 2026-11-21: with Python 3.13.18 and the three pins above, all 91
+tests pass (85 without torch, with the 6 EEGNet code tests skipped). torch
+2.15.0 was used for those 6; the camera-ready torch version is not recorded. The pinned reservoir hash in `tests/golden/` was also reproduced
 under numpy 2.5.3, so the spike code did not depend on that numpy difference.
 
 ## Data
@@ -76,8 +77,8 @@ make check
 
 This runs both checksum manifests, the author wording gate, and the test
 suite (about two and a half minutes; `make test-fast` skips the baseline
-comparison and takes about 20 seconds). Verified on 2026-11-21: passes
-(67 tests). The tests include every
+comparison and takes about 25 seconds). Verified on 2026-11-21: passes
+(91 tests). The tests include every
 cell of Tables I to III against the aggregate JSON.
 
 ### B. Check the manuscript against the aggregate outputs (no data needed)
@@ -137,10 +138,12 @@ Cross-script consistency checks that should hold after a faithful rerun are in
 | The same checks pass on a GitHub-hosted runner (workflow `tests`, run 1, commit `45bfddc`) | verified 2026-11-21. A second machine reproduced the pinned reservoir hash and the baseline comparison | this modernization, Phase 5 |
 | Refactored `analysis/` reproduces the accepted numbers on SHAPE | **unverified** (data not reachable) | |
 | Anchor 0.4626 reproduces | historical, 2026-10-01 | camera-ready audit |
-| E2, E3 reruns identical to first runs | historical, 2026-10-01 | camera-ready audit |
+| E2, E3 (EEGNet) reruns identical to first runs | historical, 2026-10-01 | camera-ready audit |
+| DEAP: ten values reproduce the original July run to 4.8e-05 | historical, 2026-10-01; the comparison of the two committed files re-verified 2026-11-21 | camera-ready audit; this modernization |
+| Every EEGNet and DEAP number in the manuscript matches the committed outputs | verified 2026-11-21 | this modernization |
 | Paper builds, body ends on page 6 | historical | memory entries #36, #41 |
 | Results reproduce on library versions other than the recorded ones | **unverified** | |
-| Any experiment run since acceptance | **none** | |
+| Any experiment re-run since acceptance | **none**. All accepted experiments, including EEGNet and DEAP, were run for the camera-ready (`docs/EXPERIMENT_REGISTRY.md`, Run record) | |
 | Reproduction by anyone outside the author's environment | **none recorded** | |
 
 ## Known limits
@@ -149,6 +152,7 @@ Cross-script consistency checks that should hold after a faithful rerun are in
   restricted data is made reachable from that session by the author.
 - Equivalence of the reservoir implementations is shown on synthetic signals.
   It has not been re-shown on the SHAPE data.
-- The EEGNet code path has no test; torch is not part of the test environment.
+- The EEGNet code tests need torch, which is an optional extra. Without it
+  they are skipped and reported as skipped; the EEGNet output tests still run.
 - Output JSON files carry a protocol string but no commit, version, or
   timestamp. Their provenance is the git history and `docs/CODE_AUDIT.md`.
