@@ -1,0 +1,29 @@
+{
+  "_comment": "Pinned outputs of the baseline implementation (commit 1667277) on tests/conftest.py make_synthetic(n_subjects=12, seed=0). Regenerate only for an approved change in scientific behavior.",
+  "environment": {
+    "numpy": "2.4.6",
+    "scikit-learn": "1.9.1",
+    "scipy": "1.18.1",
+    "python": "3.13.18"
+  },
+  "rho_0.9": {
+    "total_spikes": 2245603.0,
+    "spikes_per_bin": [
+      324728.0,
+      361325.0,
+      387042.0,
+      398562.0,
+      386571.0,
+      387375.0
+    ],
+    "firing_rate": 0.1194429025053978,
+    "sha256": "04e38fc40c6ec5cd553717a27fa56b3cdea96abb2a81243c4dc008b5664baffa"
+  },
+  "rho_0.0_first3": {
+    "total_spikes": 34591.0
+  },
+  "damage_n50": {
+    "rho_0.9": 0.18232302295918368,
+    "rho_0.0": 1.913265306122449e-05
+  }
+}

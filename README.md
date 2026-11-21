@@ -42,6 +42,7 @@ The repository should not contain the full integrated ARSPI-Net manuscript, grap
 | `outputs/aggregate/` | aggregate, de-identified results (JSON/CSV) written by `analysis/` | paper |
 | `docs/CODE_AUDIT.md` | camera-ready code audit: findings, fixes, and reproduction checks | paper |
 | `docs/` (other files), `AGENTS.md`, `CITATION.cff` | baseline definition and checksums, architecture, research map, experiment registry, reproducibility, agent handoff, harness overrides | paper |
+| `tests/`, `pyproject.toml`, `Makefile`, `.github/` | project test suite (synthetic signals), pinned dependencies, `make check`, CI | paper |
 | `scripts/`, `papercheck/`, `harness/`, `tools/`, `makefiles/`, `playbooks/`, `.claude/` | research/audit harness (quality gates, memory journal, agent skills) | harness |
 
 ## Harness provenance and sync status

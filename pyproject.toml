@@ -1,0 +1,38 @@
+# Environment and test configuration for the accepted BIBM 2026 baseline.
+# The analysis code is a set of scripts, not an installable package; this file
+# declares what they need and how the tests run.
+#
+# Version pins:
+#   numpy and scikit-learn are the versions recorded in docs/CODE_AUDIT.md for
+#   the camera-ready runs. scipy has no recorded version; the pin below is the
+#   version the test suite was verified with on 2026-11-21. The versions used
+#   for torch, matplotlib, pymupdf and Pillow in the camera-ready runs are not
+#   recorded anywhere, so those extras carry lower bounds taken from the code,
+#   not pins. See docs/REPRODUCIBILITY.md.
+
+[project]
+name = "bibm2026-edge-of-stability"
+version = "1.0.0"
+description = "Analysis code and aggregate results for 'On the Edge of Stability: Spiking Reservoir State-Space Encoding of Affective EEG' (IEEE BIBM 2026)"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "numpy==2.4.6",
+    "scikit-learn==1.9.1",
+    "scipy==1.18.1",
+]
+
+[project.optional-dependencies]
+# E3 (analysis/experiment_eegnet_signal.py). Camera-ready version not recorded.
+eegnet = ["torch>=2.5"]
+# analysis/make_fig_*.py, splice_fig_*.py, upsample_fig_*.py. Versions not recorded.
+figures = ["matplotlib>=3.8", "pymupdf>=1.24", "pillow>=10"]
+dev = ["pytest>=8"]
+
+[tool.setuptools]
+py-modules = []
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["analysis"]
+addopts = "-ra"

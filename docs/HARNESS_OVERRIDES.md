@@ -44,10 +44,15 @@ Decision recorded in the memory journal (tags `harness`, `overrides`).
 - The values the manifest expects (0.417, 0.536, 0.487, 0.472, 0.578) appear
   in the manuscript table. The EEGNet rows and the retention percentages have
   no gate coverage.
-- Do not edit the manuscript to satisfy the gate. The fix belongs in the
-  exporter and is scheduled for Phase 3.
+- Do not edit the manuscript to satisfy the gate.
+- Resolution (Phase 3): the exporter and its two generated files are part of
+  the frozen baseline, so they were left as they are. The project test
+  `tests/test_manuscript_tables.py` checks every cell of Tables I to III
+  against the aggregate JSON in the accepted layout, including the EEGNet rows
+  and both retention columns. Use `make test`, not the manifest gate, as the
+  table check. The manifest gate keeps failing on Table II by design.
 
-### 3. `papercheck` fails on abstract length (known, non-blocking)
+### 3. `papercheck` limits aligned with the accepted paper
 
 - Observed 2026-11-21: `python3 -m papercheck manuscript/main_bibm2026.tex`
   reports one error, `abstract.length` (267 words against a limit of 200),
@@ -56,10 +61,14 @@ Decision recorded in the memory journal (tags `harness`, `overrides`).
   limit (memory entry #5). The accepted abstract stands.
 - `docs/CODE_AUDIT.md`, section 4, records this gate as PASS on 2026-10-01.
   That statement is historical and does not describe the current result.
-- `harness/papercheck.toml` is project-owned. Aligning its limits with the
-  accepted paper is scheduled for Phase 3. The file also sets
-  `human_subjects = false` for a human-subject study; whether to change that
-  is an open item for the author.
+- Resolution (Phase 3): `harness/papercheck.toml`, which is project-owned,
+  now allows 300 words, 8 sentences, and 7 keywords. Result on 2026-11-21:
+  PASS with 0 errors and 4 warnings (`ethics.statement`, `intro.gap`,
+  `limits.pivot`, `related.position`). The warnings describe the accepted
+  paper and are not acted on.
+- `human_subjects` stays `false`. Setting it to `true` would turn the ethics
+  warning into a gate against a clause the author removed on purpose in the
+  camera-ready. Author decision.
 
 ### 4. Main manuscript path
 
@@ -68,12 +77,18 @@ Decision recorded in the memory journal (tags `harness`, `overrides`).
 - Project file: `manuscript/main_bibm2026.tex`.
 - With the default, `make -f makefiles/ManuscriptHarness.mk harness-verify`
   skips the LaTeX, citation, table-scan, and papercheck steps without failing.
-- Always pass the path:
+- Resolution (Phase 3): the root `Makefile` includes the harness makefile
+  with `MAIN_TEX` set, so `make harness-verify` and the other `harness-*`
+  targets use the right file. Calling the harness makefile directly with `-f`
+  still needs the path:
 
   ```sh
+  make harness-paper
   make -f makefiles/ManuscriptHarness.mk harness-verify MAIN_TEX=manuscript/main_bibm2026.tex
   python3 scripts/paper_check.py manuscript/main_bibm2026.tex --profile draft
   ```
+
+  `make harness-verify` as a whole still stops at the phrase gate (item 6).
 
   When a skill or command says `manuscript/main.tex`, read it as
   `manuscript/main_bibm2026.tex`. `python3 -m papercheck` with no path already
@@ -88,8 +103,9 @@ Decision recorded in the memory journal (tags `harness`, `overrides`).
   evidence of anything in this repository.
 - The figures "140/140 unit tests" and "70/70 fixtures" in
   `docs/CODE_AUDIT.md` describe the upstream harness repository.
-- Project tests, when added, will live in a project-owned location and will
-  not reuse these targets.
+- The project's own tests are in `tests/` and run with `make test` (pytest).
+  They are unrelated to the harness self-tests. `harness-tests` uses unittest
+  discovery and finds none of them.
 
 ### 6. Phrase and path gates report known false positives
 

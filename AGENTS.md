@@ -67,7 +67,7 @@ plainly.
 
 | Paths | Owner | You may |
 |---|---|---|
-| `analysis/`, `docs/`, `AGENTS.md`, `CLAUDE.md`, `README.md` | project | change, under the rules above |
+| `analysis/`, `tests/`, `docs/`, `AGENTS.md`, `CLAUDE.md`, `README.md`, `pyproject.toml`, `Makefile`, `.github/` | project | change, under the rules above |
 | `outputs/aggregate/`, `manuscript/` | project, frozen | read |
 | `scripts/`, `papercheck/`, `tools/`, `makefiles/`, `playbooks/`, `.claude/`, `harness/policies/`, `harness/task_specs/` | imported harness | read; record deviations in `docs/HARNESS_OVERRIDES.md` |
 | `harness/memory/memory.jsonl` | project | append through `scripts/memory.py` only |
@@ -75,12 +75,15 @@ plainly.
 ## Commands that work today
 
 ```sh
-python3 scripts/memory.py digest                          # load project memory
-sha256sum -c --quiet docs/baseline/results.sha256         # accepted artifacts intact
-python3 analysis/check_author_wording.py                  # manuscript wording gate
-python3 -m papercheck manuscript/main_bibm2026.tex        # known failure, see overrides item 3
-python3 scripts/check_table_manifest.py harness/table_manifest.yaml   # known failure, item 2
+python3 scripts/memory.py digest     # load project memory
+make check                           # checksums + wording gate + test suite
+make test                            # test suite only (pytest, synthetic signals)
+make harness-paper                   # papercheck on the accepted manuscript (passes, 4 warnings)
 ```
+
+Install first: see `docs/REPRODUCIBILITY.md`, Installing. The harness table
+manifest gate fails on Table II by design; the tests cover the tables instead
+(`docs/HARNESS_OVERRIDES.md`, item 2).
 
 Running an experiment needs restricted data and overwrites accepted outputs.
 Read `docs/REPRODUCIBILITY.md`, procedure E, first.
@@ -93,10 +96,13 @@ Read `docs/REPRODUCIBILITY.md`, procedure E, first.
   interchangeable.
 - Harness tools default to `manuscript/main.tex`, which does not exist. Pass
   `manuscript/main_bibm2026.tex`.
-- There is no test suite yet. "Tests pass" is not a claim available at the
-  baseline.
-- No dependency file exists yet. Recorded versions are in
-  `docs/REPRODUCIBILITY.md`.
+- The tests run on synthetic signals. "Tests pass" means behavior is
+  unchanged. It does not mean a result was reproduced on EEG.
+- `tests/test_baseline_integrity.py::test_accepted_implementation_unchanged`
+  fails on any edit to `analysis/*.py`. That is its job. See `docs/BASELINE.md`
+  before regenerating the manifest.
+- The repository's `.claude/settings.json` denies `git push` and `rm -rf`.
+  Do not route around a denied command; report it.
 - Session storage in cloud environments is temporary. Uncommitted work,
   including new journal entries, is lost when the session ends. Ask for
   authorization to commit before the session closes.

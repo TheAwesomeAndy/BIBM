@@ -57,15 +57,15 @@ import its band-power and ERP-window functions. Do not delete or "clean up" it.
 
 | Component | Locations | Equivalence status |
 |---|---|---|
-| LIF reservoir update loop | `regen_reservoir_embedding.regen`, `experiment2_rawsignal.bsc6_all`, `experiment_camera_ready.bsc6`, `experiment_camera_ready.damage` | Same update by reading; `docs/CODE_AUDIT.md` A1 verified two of them against the upstream source. No automated test yet |
-| Weight initialization | `regen_reservoir_embedding.init_weights`, `experiment2_rawsignal.init_weights`, `experiment_camera_ready.weights` | Same RNG call order by reading. `weights(rho)` divides by the spectral radius without the zero guard |
-| ERP-window means | `RB.build_blocks`, `E2S.erp_all`, inline in `EC.run_e2` | Same by reading |
-| Readout fit | `EC.fit_pred`, `E2S._fit_pred`, inline in `RB.run_oof` and `regen.validate`, `deap_replication.fit_pred` | Same estimator settings; different return conventions |
-| Subject bootstrap | `RB.subject_bootstrap` (seed 12345), `E2S.subj_boot` (seed 7) | **Not interchangeable.** Different RNG seeds give different intervals |
+| LIF reservoir update loop | `regen_reservoir_embedding.regen`, `experiment2_rawsignal.bsc6_all`, `experiment_camera_ready.bsc6`, `experiment_camera_ready.damage` | The three encoders are bitwise equal on the synthetic fixture (`tests/test_reservoir.py`). `damage` shares the update but is tested only against pinned values |
+| Weight initialization | `regen_reservoir_embedding.init_weights`, `experiment2_rawsignal.init_weights`, `experiment_camera_ready.weights` | Bitwise equal at rho 0.9 (tested). `weights(rho)` divides by the spectral radius without the zero guard |
+| ERP-window means | `RB.build_blocks`, `E2S.erp_all`, inline in `EC.run_e2` | First two equal (tested); the inline copy is the same by reading |
+| Readout fit | `EC.fit_pred`, `E2S._fit_pred`, inline in `RB.run_oof` and `regen.validate`, `deap_replication.fit_pred` | First three give equal probabilities (tested); the last two are the same settings by reading, with different return conventions |
+| Subject bootstrap | `RB.subject_bootstrap` (seed 12345), `E2S.subj_boot` (seed 7) | **Not interchangeable.** Different RNG seeds give different intervals (a test pins the difference) |
 | PCA embedding of training codes | `fit_transform` in `regen` and `E2S`; `fit` then `transform` elsewhere | **Not interchangeable.** See `docs/CODE_AUDIT.md` A10 |
 | Constants (`SEEDS`, reservoir parameters, windows, `N_BOOT`) | up to six files | Same values by reading |
 
-Consolidation is Phase 4 work and needs characterization tests first. Rows
+Consolidation is Phase 4 work. The characterization tests now exist. Rows
 marked "not interchangeable" must stay separate.
 
 ### Execution assumptions an agent must know
@@ -92,6 +92,7 @@ marked "not interchangeable" must stay separate.
 | `scripts/verify_latex.py` | harness, locally fixed | LaTeX build |
 | `scripts/check_forbidden_phrases.py`, `tools/check_path_markers.py` | harness | Phrase and path hygiene |
 | `docs/baseline/*.sha256` | project | Accepted artifacts unchanged |
+| `tests/` (`make test`) | project | Baseline integrity, reservoir, perturbations, features, fills, protocol, bootstrap, and every cell of Tables I to III |
 
 Current gate status, including two gates that fail for known reasons, is in
 `docs/HARNESS_OVERRIDES.md`.
@@ -106,8 +107,15 @@ Current gate status, including two gates that fail for known reasons, is in
 | `docs/EXPERIMENT_REGISTRY.md` | Per-experiment parameters, outputs, status | Index over the above, plus extension rules |
 | `docs/RESEARCH_MAP.md` | Scientific concept to code to evidence | Index |
 
-## What is absent
+## Tests and environment (added after the baseline)
 
-No Python package, dependency file, test suite, or continuous integration
-exists at the baseline. The harness's own unit tests and fixtures live in the
-upstream harness repository and are not installed here.
+| Path | Role |
+|---|---|
+| `pyproject.toml` | Pinned dependencies and pytest configuration. The code is still scripts, not a package |
+| `tests/` | Project test suite. Synthetic signals only; reads no restricted data and writes nothing into `outputs/` |
+| `tests/golden/synthetic_reservoir.json` | Pinned reservoir outputs of the baseline implementation on the synthetic fixture |
+| `Makefile` | `make check` runs checksums, the wording gate, and the tests. Includes the harness makefile with this project's manuscript path |
+| `.github/workflows/tests.yml` | Runs `make check` on push and pull request |
+
+The harness's own unit tests and fixtures live in the upstream harness
+repository and are not installed here. There is still no Python package.

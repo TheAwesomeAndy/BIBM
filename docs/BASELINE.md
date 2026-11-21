@@ -15,9 +15,9 @@ to prove it has not moved.
   `lane2024arspi`). Lineage is provenance. It does not widen the scope rules in
   `CLAUDE.md`.
 
-A git tag for the baseline commit (proposed name `bibm2026-camera-ready`) has
-not been created. Creating and pushing a tag requires the author's explicit
-authorization.
+The tag `bibm2026-camera-ready` marks the baseline commit. It was created
+locally on 2026-11-21 with the author's approval. Check `git ls-remote --tags
+origin` before relying on it: at the time of writing it had not been pushed.
 
 ## What is frozen
 

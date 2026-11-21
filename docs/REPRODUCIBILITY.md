@@ -14,7 +14,7 @@ From `docs/CODE_AUDIT.md`, section 3 (2026-10-01):
 | numpy | 2.4.6 | audit |
 | scikit-learn | 1.9.1 | audit |
 | Python | not recorded | |
-| scipy | not recorded | |
+| scipy | not recorded. 1.18.1 is pinned because the test suite was verified with it on 2026-11-21 | this modernization |
 | torch (E3) | not recorded | |
 | matplotlib, pymupdf, Pillow (figures) | not recorded | |
 
@@ -28,13 +28,21 @@ from this repository.
 - E3 ran on CPU with two torch threads; the audit reports identical reruns
   under that setting.
 
-### Not yet provided
+### Installing
 
-There is no dependency file and no lock file at the baseline. Adding one is
-Phase 3 of the modernization plan. Until then, treat any environment other
-than the recorded one as unverified: PCA with the randomized solver, the
-logistic solver, and torch training can all shift low-order digits between
-library versions.
+```sh
+pip install "numpy==2.4.6" "scikit-learn==1.9.1" "scipy==1.18.1" "pytest>=8"
+```
+
+`pyproject.toml` holds the same pins, plus optional extras `eegnet` and
+`figures` whose camera-ready versions are unknown and therefore carry lower
+bounds only. Treat any environment other than the pinned one as unverified:
+PCA with the randomized solver, the logistic solver, and torch training can
+all shift low-order digits between library versions.
+
+Verified 2026-11-21: with Python 3.13.18 and the three pins above, all 65
+tests pass. The pinned reservoir hash in `tests/golden/` was also reproduced
+under numpy 2.5.3, so the spike code did not depend on that numpy difference.
 
 ## Data
 
@@ -63,11 +71,12 @@ under the DEAP licence.
 ### A. Check that the accepted artifacts are intact (no data needed)
 
 ```sh
-sha256sum -c --quiet docs/baseline/results.sha256
-python3 analysis/check_author_wording.py
+make check
 ```
 
-Verified on 2026-11-21 at the baseline commit: both pass.
+This runs both checksum manifests, the author wording gate, and the test
+suite. Verified on 2026-11-21: passes (65 tests). The tests include every
+cell of Tables I to III against the aggregate JSON.
 
 ### B. Check the manuscript against the aggregate outputs (no data needed)
 
@@ -75,8 +84,9 @@ Verified on 2026-11-21 at the baseline commit: both pass.
 python3 scripts/check_table_manifest.py harness/table_manifest.yaml
 ```
 
-**Fails at the baseline** for Table II, for a known reason unrelated to the
-numbers. See `docs/HARNESS_OVERRIDES.md`, item 2.
+**Fails** for Table II, for a known reason unrelated to the numbers. See
+`docs/HARNESS_OVERRIDES.md`, item 2. `tests/test_manuscript_tables.py` checks
+the same cells, and more, against the accepted layout.
 
 ### C. Build the paper (needs a LaTeX installation)
 
@@ -118,6 +128,8 @@ Cross-script consistency checks that should hold after a faithful rerun are in
 | Claim | Status | By whom |
 |---|---|---|
 | Accepted artifacts match their checksums | verified 2026-11-21 | this modernization, Phase 2 |
+| Three reservoir implementations and three weight initializers are bitwise equal | verified 2026-11-21, synthetic signals only | this modernization, Phase 3 |
+| All cells of Tables I to III match the aggregate JSON | verified 2026-11-21 | this modernization, Phase 3 |
 | Anchor 0.4626 reproduces | historical, 2026-10-01 | camera-ready audit |
 | E2, E3 reruns identical to first runs | historical, 2026-10-01 | camera-ready audit |
 | Paper builds, body ends on page 6 | historical | memory entries #36, #41 |
@@ -129,7 +141,8 @@ Cross-script consistency checks that should hold after a faithful rerun are in
 
 - Real-data reproduction cannot be done in a cloud session unless the
   restricted data is made reachable from that session by the author.
-- The four reservoir implementations have not been compared by an automated
-  test.
+- Equivalence of the reservoir implementations is shown on synthetic signals.
+  It has not been re-shown on the SHAPE data.
+- The EEGNet code path has no test; torch is not part of the test environment.
 - Output JSON files carry a protocol string but no commit, version, or
   timestamp. Their provenance is the git history and `docs/CODE_AUDIT.md`.
