@@ -20,14 +20,17 @@ human_subjects = false
 min_words = 8
 max_words = 13
 
+# Limits below describe the accepted paper (267-word, 8-sentence abstract;
+# 7 author-approved keywords). The BIBM call sets no abstract limit (memory
+# entry #5); the harness defaults were 200 words, 4 sentences, 4-6 keywords.
 [abstract]
-max_words = 200
+max_words = 300
 min_sentences = 4
-max_sentences = 4
+max_sentences = 8
 
 [keywords]
 min = 4
-max = 6
+max = 7
 required = false
 
 [language]

@@ -8,7 +8,24 @@ Target paper:
 
 **On the Edge of Stability: Spiking Reservoir State-Space Encoding of Affective EEG**
 
-Submission target: IEEE BIBM 2026 Doctoral Forum route, written as a standard IEEE BIBM proceedings paper.
+Venue: IEEE BIBM 2026 Doctoral Forum route (paper S60204), written as a standard IEEE BIBM proceedings paper.
+
+## Status (read first)
+
+The paper is **accepted** and the camera-ready version has been submitted:
+
+A. Lane, W. Tang, and B. Nelson, "On the Edge of Stability: Spiking Reservoir State-Space Encoding of Affective EEG," 2026 IEEE International Conference on Bioinformatics and Biomedicine (BIBM), Dallas, TX, 2026.
+
+The paper is derived from ARSPI-Net and studies its temporal encoding stage. That lineage is provenance; it does not widen the scope rules below.
+
+Consequences for every rule in this file:
+
+* The accepted manuscript, aggregate results, figures, and the analysis implementation are a protected baseline. See `docs/BASELINE.md`. Do not revise, regenerate, or optimize them.
+* The manuscript rules below (writing strategy, figure policy, build validation, cover note) record how the accepted paper was produced. They still bind any edit to the manuscript, but they are not an invitation to edit it. Gate findings on the accepted paper are reported, not acted on, unless the author asks.
+* The scope, protocol, PCA-language, and data-isolation rules apply unchanged to all work, including future extensions.
+* New experiments and journal-extension work follow `docs/EXPERIMENT_REGISTRY.md` and never overwrite the baseline.
+
+Companion documents: `AGENTS.md` (vendor-neutral agent rules and reading order), `docs/ARCHITECTURE.md`, `docs/RESEARCH_MAP.md`, `docs/EXPERIMENT_REGISTRY.md`, `docs/REPRODUCIBILITY.md`, `docs/AGENT_HANDOFF.md`, and `docs/HARNESS_OVERRIDES.md`. Where an imported harness policy, skill, or playbook conflicts with this file (for example the generic leave-one-subject-out recommendation in `harness/policies/rigor_policy.md`), this file wins; the reconciliations are listed in `docs/HARNESS_OVERRIDES.md`.
 
 ## Cloud session persistence (read first)
 

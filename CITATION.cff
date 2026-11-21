@@ -1,0 +1,29 @@
+cff-version: 1.2.0
+message: "If you use this code or these results, please cite the paper below."
+title: "On the Edge of Stability: Spiking Reservoir State-Space Encoding of Affective EEG (analysis code and aggregate results)"
+type: software
+authors:
+  - family-names: Lane
+    given-names: Andrew A.
+  - family-names: Tang
+    given-names: Wendy
+  - family-names: Nelson
+    given-names: Brady D.
+repository-code: "https://github.com/TheAwesomeAndy/BIBM"
+preferred-citation:
+  type: conference-paper
+  title: "On the Edge of Stability: Spiking Reservoir State-Space Encoding of Affective EEG"
+  authors:
+    - family-names: Lane
+      given-names: Andrew A.
+    - family-names: Tang
+      given-names: Wendy
+    - family-names: Nelson
+      given-names: Brady D.
+  collection-title: "2026 IEEE International Conference on Bioinformatics and Biomedicine (BIBM)"
+  conference:
+    name: "2026 IEEE International Conference on Bioinformatics and Biomedicine (BIBM)"
+    city: Dallas
+    region: TX
+    country: US
+  year: 2026

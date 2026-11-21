@@ -1,14 +1,28 @@
-# BIBM 2026 Conference Paper 1
+# BIBM 2026: On the Edge of Stability
 
-This repository contains the IEEE BIBM 2026 conference-paper carve-out from the operational-distinctness work.
+Analysis code, aggregate results, and manuscript for the accepted IEEE BIBM 2026 paper. It is derived from the ARSPI-Net work and studies its temporal encoding stage on its own.
 
-## Working title
+## Status
 
-**On the Edge of Stability: Spiking Reservoir State-Space Encoding of Affective EEG**
+**Accepted** (IEEE BIBM 2026 Doctoral Forum, paper S60204). The camera-ready version has been submitted. The accepted manuscript, results, and implementation are a protected baseline: see `docs/BASELINE.md`.
 
-## Submission target
+## Citation
 
-IEEE International Conference on Bioinformatics and Biomedicine (BIBM) 2026. The intended route is the BIBM 2026 Doctoral Forum submission portal, with the manuscript written and formatted as a standard IEEE conference proceedings paper.
+A. Lane, W. Tang, and B. Nelson, "On the Edge of Stability: Spiking Reservoir State-Space Encoding of Affective EEG," 2026 IEEE International Conference on Bioinformatics and Biomedicine (BIBM), Dallas, TX, 2026.
+
+Machine-readable form: `CITATION.cff`.
+
+## Where to start
+
+| You want to | Read |
+|---|---|
+| Work here as an AI agent | `AGENTS.md`, then `CLAUDE.md` |
+| Understand the layout and ownership | `docs/ARCHITECTURE.md` |
+| Find the code and evidence behind a scientific claim | `docs/RESEARCH_MAP.md` |
+| See every experiment, its parameters, and its status | `docs/EXPERIMENT_REGISTRY.md` |
+| Check or reproduce results | `docs/REPRODUCIBILITY.md` |
+| Know which harness defaults this project overrides | `docs/HARNESS_OVERRIDES.md` |
+| Hand work to another agent | `docs/AGENT_HANDOFF.md` |
 
 ## Scope
 
@@ -27,6 +41,8 @@ The repository should not contain the full integrated ARSPI-Net manuscript, grap
 | `analysis/` | every script that produces a number, table, or figure in the paper; see `analysis/README.md` for the full paper-element → script → output map | paper |
 | `outputs/aggregate/` | aggregate, de-identified results (JSON/CSV) written by `analysis/` | paper |
 | `docs/CODE_AUDIT.md` | camera-ready code audit: findings, fixes, and reproduction checks | paper |
+| `docs/` (other files), `AGENTS.md`, `CITATION.cff` | baseline definition and checksums, architecture, research map, experiment registry, reproducibility, agent handoff, harness overrides | paper |
+| `tests/`, `pyproject.toml`, `Makefile`, `.github/` | project test suite (synthetic signals), pinned dependencies, `make check`, CI | paper |
 | `scripts/`, `papercheck/`, `harness/`, `tools/`, `makefiles/`, `playbooks/`, `.claude/` | research/audit harness (quality gates, memory journal, agent skills) | harness |
 
 ## Harness provenance and sync status
@@ -38,13 +54,14 @@ with `scripts/install_harness.py`. As of 2026-10-01 they are byte-identical to i
 
 - `harness/papercheck.toml` — project configuration (main file, single-blind venue);
 - `harness/memory/memory.jsonl` — this project's memory journal;
+- `.claude/settings.json` — the `git push` deny rule is removed (see `docs/HARNESS_OVERRIDES.md`, item 9);
 - `scripts/verify_latex.py` — bug fix not yet upstream: the build ran inside the
   manuscript directory but passed the caller-relative path, so any manuscript in a
   subdirectory (e.g. `manuscript/main.tex`) failed to build (the harness's own
   `good_latex_build` fixture fails without the fix; 70/70 fixtures pass with it).
 
 To re-sync, run the installer from a fresh clone of the harness repository and
-re-apply the three differences above.
+re-apply the differences above.
 
 ## Building the paper
 
