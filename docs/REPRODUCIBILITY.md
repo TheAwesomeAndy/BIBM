@@ -40,7 +40,7 @@ bounds only. Treat any environment other than the pinned one as unverified:
 PCA with the randomized solver, the logistic solver, and torch training can
 all shift low-order digits between library versions.
 
-Verified 2026-11-21: with Python 3.13.18 and the three pins above, all 65
+Verified 2026-11-21: with Python 3.13.18 and the three pins above, all 67
 tests pass. The pinned reservoir hash in `tests/golden/` was also reproduced
 under numpy 2.5.3, so the spike code did not depend on that numpy difference.
 
@@ -75,7 +75,9 @@ make check
 ```
 
 This runs both checksum manifests, the author wording gate, and the test
-suite. Verified on 2026-11-21: passes (65 tests). The tests include every
+suite (about two and a half minutes; `make test-fast` skips the baseline
+comparison and takes about 20 seconds). Verified on 2026-11-21: passes
+(67 tests). The tests include every
 cell of Tables I to III against the aggregate JSON.
 
 ### B. Check the manuscript against the aggregate outputs (no data needed)
@@ -130,6 +132,8 @@ Cross-script consistency checks that should hold after a faithful rerun are in
 | Accepted artifacts match their checksums | verified 2026-11-21 | this modernization, Phase 2 |
 | Three reservoir implementations and three weight initializers are bitwise equal | verified 2026-11-21, synthetic signals only | this modernization, Phase 3 |
 | All cells of Tables I to III match the aggregate JSON | verified 2026-11-21 | this modernization, Phase 3 |
+| Refactored `analysis/` equals the baseline commit bitwise on 141 outputs | verified 2026-11-21, synthetic signals only | this modernization, Phase 4 |
+| Refactored `analysis/` reproduces the accepted numbers on SHAPE | **unverified** (data not reachable) | |
 | Anchor 0.4626 reproduces | historical, 2026-10-01 | camera-ready audit |
 | E2, E3 reruns identical to first runs | historical, 2026-10-01 | camera-ready audit |
 | Paper builds, body ends on page 6 | historical | memory entries #36, #41 |

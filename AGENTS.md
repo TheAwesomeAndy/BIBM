@@ -77,7 +77,8 @@ plainly.
 ```sh
 python3 scripts/memory.py digest     # load project memory
 make check                           # checksums + wording gate + test suite
-make test                            # test suite only (pytest, synthetic signals)
+make test                            # full test suite (about 2.5 min)
+make test-fast                       # without the baseline comparison (about 20 s)
 make harness-paper                   # papercheck on the accepted manuscript (passes, 4 warnings)
 ```
 
@@ -90,8 +91,13 @@ Read `docs/REPRODUCIBILITY.md`, procedure E, first.
 
 ## Known traps
 
+- `analysis/core.py` is the single definition of the constants, weight draw,
+  LIF update, BSC6 code, ERP-window encoder, and readout. Change science there
+  only with approval; the equivalence test will fail, as it should.
 - `analysis/experiment2_rawsignal.py` is a superseded experiment and a live
   library. Four experiments import it.
+- Two reservoir loops were left unmerged on purpose (different floating-point
+  addition order). Do not "finish the job" without real-data evidence.
 - The two subject-bootstrap functions use different seeds. They are not
   interchangeable.
 - Harness tools default to `manuscript/main.tex`, which does not exist. Pass

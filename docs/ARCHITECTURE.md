@@ -44,29 +44,30 @@ sibling scripts through `sys.path.insert(0, <analysis dir>)`.
 
 | Module | Provides | Imported by |
 |---|---|---|
+| `core.py` | **Single definition** of the protocol constants, `init_weights(rho)`, `lif_step`, `reservoir_bsc6`, `erp_window_means`, `fit_readout`, `readout_proba`. Imports no other project module | `EC`, `E2S`, `RB`, `regen_reservoir_embedding.py` |
 | `perturbations.py` | `removal_draw`, `remove_channels`, `amplitude_noise`, `temporal_jitter`, `SIGNAL_CONDITIONS`; all draws keyed to `(seed, fold)` | E3, E4 |
 | `reanalysis_subject_bootstrap.py` (alias `RB`) | `_resolve_pickle`, `drop_channels`, `fill_test`, `run_oof`, `subject_bootstrap` (seed 12345), `paired_diff_ci` (seed 999), `ERP_WINDOWS_MS`, `FILLS`, `DROP_LEVELS`, `N_BOOT` | E1, E2, E3, E4, E5, Fig. 1, Fig. 2 |
-| `experiment2_rawsignal.py` (alias `E2S`) | `bandpower_all`, `erp_all`, `_fit_pred` | E1/E2, E3, E4, E5 |
-| `experiment_camera_ready.py` (alias `EC`) | `weights(rho)`, `bsc6(X, rho)`, `damage`, `fit_pred`, `fold_embeddings`, constants | E4, E5, Fig. 1 |
+| `experiment2_rawsignal.py` (alias `E2S`) | `bandpower_all` (defined here), `erp_all` and `_fit_pred` (thin wrappers over `core`) | E1/E2, E3, E4, E5 |
+| `experiment_camera_ready.py` (alias `EC`) | `damage`, `fold_embeddings`, the E1 and E2 drivers; `weights`, `bsc6`, `fit_pred` and the constants are thin wrappers over `core`, kept so existing callers do not change | E4, E5, Fig. 1 |
 
 **Trap.** `experiment2_rawsignal.py` is superseded as an *experiment* (its JSON
 output is not used by the paper) but it is a live *library*: four experiments
 import its band-power and ERP-window functions. Do not delete or "clean up" it.
 
-### Known duplication (not yet consolidated)
+### Duplication: what was consolidated and what was left
 
 | Component | Locations | Equivalence status |
 |---|---|---|
-| LIF reservoir update loop | `regen_reservoir_embedding.regen`, `experiment2_rawsignal.bsc6_all`, `experiment_camera_ready.bsc6`, `experiment_camera_ready.damage` | The three encoders are bitwise equal on the synthetic fixture (`tests/test_reservoir.py`). `damage` shares the update but is tested only against pinned values |
-| Weight initialization | `regen_reservoir_embedding.init_weights`, `experiment2_rawsignal.init_weights`, `experiment_camera_ready.weights` | Bitwise equal at rho 0.9 (tested). `weights(rho)` divides by the spectral radius without the zero guard |
-| ERP-window means | `RB.build_blocks`, `E2S.erp_all`, inline in `EC.run_e2` | First two equal (tested); the inline copy is the same by reading |
-| Readout fit | `EC.fit_pred`, `E2S._fit_pred`, inline in `RB.run_oof` and `regen.validate`, `deap_replication.fit_pred` | First three give equal probabilities (tested); the last two are the same settings by reading, with different return conventions |
+| LIF reservoir update loop | `core.lif_step` (used by `core.reservoir_bsc6` and `EC.damage`); own loops remain in `regen_reservoir_embedding.regen` and `experiment2_rawsignal.bsc6_all` | **Partly consolidated.** The two remaining loops add the currents in a different floating-point order, leak + (input + recurrent) against (leak + input) + recurrent. All forms give bitwise-equal spike counts on the synthetic fixture, and a mutant with the order swapped changed none of 141 outputs. That is not proof for the EEG data, so they stay as written |
+| Weight initialization | `core.init_weights` | **Consolidated.** The three former copies were bitwise equal; all now call `core` |
+| ERP-window means | `core.erp_window_means` | **Consolidated.** Three former copies with identical arithmetic |
+| Readout fit | `core.fit_readout`, `core.readout_proba`; own copy in `deap_replication.fit_pred` | **Consolidated** for the four SHAPE scripts. The DEAP script is untouched (no test path without DEAP) |
 | Subject bootstrap | `RB.subject_bootstrap` (seed 12345), `E2S.subj_boot` (seed 7) | **Not interchangeable.** Different RNG seeds give different intervals (a test pins the difference) |
 | PCA embedding of training codes | `fit_transform` in `regen` and `E2S`; `fit` then `transform` elsewhere | **Not interchangeable.** See `docs/CODE_AUDIT.md` A10 |
-| Constants (`SEEDS`, reservoir parameters, windows, `N_BOOT`) | up to six files | Same values by reading |
+| Constants (`SEEDS`, reservoir parameters, windows, `N_BOOT`) | `core`; own copies remain in `experiment_eegnet_signal.py` (`SEEDS`), `deap_replication.py` (its own protocol), `perturbations.py` (`FS`) | **Consolidated** for the four SHAPE scripts; the rest untouched |
 
-Consolidation is Phase 4 work. The characterization tests now exist. Rows
-marked "not interchangeable" must stay separate.
+Rows marked "not interchangeable" must stay separate. Evidence for every
+consolidated row is `tests/test_refactor_equivalence.py` (`docs/BASELINE.md`).
 
 ### Execution assumptions an agent must know
 
@@ -92,6 +93,7 @@ marked "not interchangeable" must stay separate.
 | `scripts/verify_latex.py` | harness, locally fixed | LaTeX build |
 | `scripts/check_forbidden_phrases.py`, `tools/check_path_markers.py` | harness | Phrase and path hygiene |
 | `docs/baseline/*.sha256` | project | Accepted artifacts unchanged |
+| `tests/test_refactor_equivalence.py` + `tests/equivalence_driver.py` | project | Working tree against the baseline commit, bitwise, on synthetic input. Needs full git history. About two minutes |
 | `tests/` (`make test`) | project | Baseline integrity, reservoir, perturbations, features, fills, protocol, bootstrap, and every cell of Tables I to III |
 
 Current gate status, including two gates that fail for known reasons, is in

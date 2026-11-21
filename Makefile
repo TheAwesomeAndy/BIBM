@@ -8,7 +8,7 @@ CSV_DIR := outputs/aggregate
 
 include makefiles/ManuscriptHarness.mk
 
-.PHONY: check test baseline wording
+.PHONY: check test test-fast baseline wording
 
 # Everything that needs neither restricted data nor LaTeX.
 check: baseline wording test
@@ -22,3 +22,7 @@ wording:
 
 test:
 	$(PYTHON) -m pytest
+
+# Skips the comparison against the baseline commit (two subprocess runs).
+test-fast:
+	$(PYTHON) -m pytest --deselect tests/test_refactor_equivalence.py

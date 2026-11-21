@@ -42,6 +42,7 @@ on the training subjects of each fold unless a script says otherwise.
 | Table III (signal level: electrode removal 10/30/50%, 5 dB noise, ±50 ms jitter; all encoders; EEGNet paired augmented-minus-unaugmented and clean-minus-condition contrasts) | `experiment_signal_perturbations.py` (band-power, ERP-window, reservoir), `experiment_eegnet_signal.py` (EEGNet ± augmentation) | `e4_signal_perturbations.json`, `e3_eegnet_signal.json` |
 | Fig. 4 (DEAP fill-rule check; EEGNet training effect) | `deap_replication.py`; figure: `make_fig_deap_aug.py` | `deap_replication_v2.json`; `fig_deap_aug.pdf` |
 | Transductive (pooled-PCA) sensitivity | `regen_reservoir_embedding.py` → `reanalysis_subject_bootstrap.py` | `subject_bootstrap_reanalysis.json` |
+| Shared scientific core (constants, weight draw, LIF update, BSC6, ERP-window encoder, readout); extracted after acceptance with bitwise-equal outputs, see `docs/BASELINE.md` | `core.py` | — |
 | Shared helpers (band power, ERP windows, fills, subject bootstrap) | `experiment2_rawsignal.py`, `reanalysis_subject_bootstrap.py` | — |
 | Shared signal-level perturbations (identical draws for every encoder) | `perturbations.py` | — |
 

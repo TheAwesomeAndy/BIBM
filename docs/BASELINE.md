@@ -26,7 +26,7 @@ origin` before relying on it: at the time of writing it had not been pushed.
 | Accepted results | `outputs/aggregate/*` | Never edited, never regenerated in place |
 | Accepted manuscript | `manuscript/main_bibm2026.tex`, the two PDFs, `manuscript/cover_note.md` | Not revised. The verification tools check it; they are not a reason to rewrite it |
 | Accepted figures | the four files named in `CLAUDE.md`, Figure policy | Not regenerated |
-| Accepted implementation | `analysis/*.py` at the baseline commit | Changed only by an approved, behavior-preserving refactor with equivalence tests |
+| Accepted implementation | `analysis/*.py` at the baseline commit | Changed only by an approved, behavior-preserving refactor with equivalence tests. One such refactor has landed (see below) |
 
 ## Checksums
 
@@ -35,10 +35,28 @@ Two SHA-256 manifests were written at the baseline commit:
 - `docs/baseline/results.sha256`: aggregate outputs, manuscript source and
   PDFs, cover note, and the four manuscript figures. **These must always
   verify.** A failure means an accepted artifact changed.
-- `docs/baseline/implementation.sha256`: every `analysis/*.py` file. This one is
-  a reference point. It is expected to stop verifying when an approved refactor
-  lands; at that point the refactor's equivalence evidence replaces it, and the
-  file is regenerated in the same commit with a note in the memory journal.
+- `docs/baseline/implementation.sha256`: every `analysis/*.py` file as of the
+  last approved change. It stops verifying on any edit to `analysis/`. After an
+  approved refactor, the equivalence evidence is recorded, and the file is
+  regenerated in the same commit with a note in the memory journal.
+
+### Refactor of 2026-11-21 (approved, behavior-preserving)
+
+`analysis/core.py` was extracted and four scripts now import it
+(`docs/ARCHITECTURE.md`). The implementation manifest was regenerated.
+
+The reference for "what the accepted code computes" is the baseline commit
+itself, not the manifest. `tests/test_refactor_equivalence.py` checks out
+`analysis/` from that commit, runs it and the working tree on the same
+synthetic input, and requires bitwise-equal results. Result on 2026-11-21:
+141 of 141 outputs equal.
+
+Limit: the comparison uses synthetic signals. Equivalence on the restricted
+EEG data has not been shown, because that data was not reachable. Scripts with
+no synthetic test path (`experiment_eegnet_signal.py`, `deap_replication.py`,
+the figure scripts, `experiment_controls.py`,
+`experiment_signal_perturbations.py`) were not edited. The last two reach the
+shared code only through functions the comparison covers.
 
 Verify from the repository root:
 

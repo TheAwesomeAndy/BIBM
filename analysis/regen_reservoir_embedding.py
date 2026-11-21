@@ -20,13 +20,11 @@ from pathlib import Path
 import numpy as np
 from sklearn.decomposition import PCA
 from sklearn.model_selection import StratifiedGroupKFold
-from sklearn.preprocessing import StandardScaler
-from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import balanced_accuracy_score
 
-N_RES, BETA, THETA, SEED = 256, 0.05, 0.5, 42
-BSC_N_BINS, T_START, T_END, PCA_K = 6, 10, 70, 64
-SEEDS = [42, 43, 44, 45, 46]
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+import core  # noqa: E402  (constants, weights, readout)
+from core import BETA, BSC_N_BINS, N_RES, PCA_K, SEED, SEEDS, T_END, T_START, THETA  # noqa: E402,F401
 
 PKL = os.environ.get("ARSPI_SHAPE_FEATURES",
                      "/home/user/operational-distinctness-paper/data/shape_features_211.pkl")
@@ -34,19 +32,16 @@ OUT = Path(os.environ.get("ARSPI_RESERVOIR_NPY", "/tmp/reservoir_bsc6_pca_211.np
 
 
 def init_weights():
-    rng = np.random.RandomState(SEED)
-    lin = np.sqrt(6.0 / (1 + N_RES))
-    W_in = rng.uniform(-lin, lin, (N_RES, 1))
-    lrec = np.sqrt(6.0 / (N_RES + N_RES))
-    W_rec = rng.uniform(-lrec, lrec, (N_RES, N_RES))
-    sr = np.abs(np.linalg.eigvals(W_rec)).max()
-    if sr > 0:
-        W_rec *= 0.9 / sr
-    return W_in, W_rec
+    return core.init_weights(0.9)
 
 
 def regen(X_ds):
-    """X_ds: (N,256,34) z-scored EEG. Returns (N,34,64) embedding + fitted PCA."""
+    """X_ds: (N,256,34) z-scored EEG. Returns (N,34,64) embedding + fitted PCA.
+
+    The reservoir loop is kept as written instead of calling core.reservoir_bsc6: it adds
+    the input and recurrent currents first (I_tot) and then the leak term, a different
+    floating-point addition order from core.lif_step. See the note at the top of core.py.
+    """
     N, T, n_ch = X_ds.shape
     C = N * n_ch
     # column c = obs*34 + ch  (matches bsc6_raw.reshape(-1,1536) row order)
@@ -78,9 +73,7 @@ def validate(emb, y, groups):
     for seed in SEEDS:
         cv = StratifiedGroupKFold(5, shuffle=True, random_state=seed)
         for tr, te in cv.split(X, y, groups=groups):
-            sc = StandardScaler().fit(X[tr])
-            clf = LogisticRegression(max_iter=2000, C=1.0, class_weight="balanced",
-                                     solver="lbfgs", random_state=seed).fit(sc.transform(X[tr]), y[tr])
+            sc, clf = core.fit_readout(X[tr], y[tr], seed)
             bas.append(balanced_accuracy_score(y[te], clf.predict(sc.transform(X[te]))))
     return float(np.mean(bas))
 

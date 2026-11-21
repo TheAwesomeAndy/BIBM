@@ -20,41 +20,36 @@ aggregate outputs (it ingests the raw signal directly).
 Reads the restricted SHAPE pickle locally; writes only aggregate JSON.
 """
 from __future__ import annotations
-import json, os, pickle
+import json, os, pickle, sys
 from pathlib import Path
 import numpy as np
 from scipy.signal import welch
 from sklearn.decomposition import PCA
 from sklearn.model_selection import StratifiedGroupKFold
-from sklearn.preprocessing import StandardScaler
-from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import balanced_accuracy_score
 
-N_RES, BETA, THETA, SEED = 256, 0.05, 0.5, 42
-BSC_N_BINS, T_START, T_END, PCA_K = 6, 10, 70, 64
-SEEDS = [42, 43, 44, 45, 46]
-FS = 256
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+import core  # noqa: E402  (constants, weights, ERP-window encoder, readout)
+from core import (  # noqa: E402,F401  (re-exported: other scripts read E2S.FS, E2S.BANDS, ...)
+    BANDS, BETA, BSC_N_BINS, ERP_WINDOWS_MS, FS, N_BOOT, N_RES, PCA_K, SEED, SEEDS, T_END, T_START, THETA,
+)
+
 LEVELS = [0.1, 0.2, 0.3, 0.4, 0.5]
-# Windows are in sample-index milliseconds (sample / 256 Hz), measured from the FIRST sample of
-# X_ds, which is 200 ms before stimulus onset (X_ds == raw[0:1024:4]; onset at raw sample 205,
-# X_ds sample 51). Relative to onset they span about -120..0, 50..250 and 250..600 ms.
-ERP_WINDOWS_MS = [(80, 200), (250, 450), (450, 800)]
-BANDS = [(1, 4), (4, 8), (8, 13), (13, 30), (30, 45)]
-N_BOOT = 4000
 PKL = os.environ.get("ARSPI_SHAPE_FEATURES",
                      "/home/user/operational-distinctness-paper/data/shape_features_211.pkl")
 
 
 def init_weights():
-    rng = np.random.RandomState(SEED)
-    lin = np.sqrt(6.0 / (1 + N_RES)); W_in = rng.uniform(-lin, lin, (N_RES, 1))
-    lrec = np.sqrt(6.0 / (2 * N_RES)); W_rec = rng.uniform(-lrec, lrec, (N_RES, N_RES))
-    W_rec *= 0.9 / np.abs(np.linalg.eigvals(W_rec)).max()
-    return W_in, W_rec
+    return core.init_weights(0.9)
 
 
 def bsc6_all(X_ds):
-    """Clean BSC6 for every (obs,channel): returns (N,34,1536)."""
+    """Clean BSC6 for every (obs,channel): returns (N,34,1536).
+
+    Kept as written instead of calling core.reservoir_bsc6: this loop adds the input and
+    recurrent currents first (I) and then the leak term, a different floating-point
+    addition order from core.lif_step. See the note at the top of core.py.
+    """
     N, T, n_ch = X_ds.shape; C = N * n_ch
     S = np.transpose(X_ds, (1, 0, 2)).reshape(T, C).astype(np.float64)
     W_in, W_rec = init_weights(); win0 = W_in[:, 0][:, None]
@@ -88,11 +83,7 @@ def bandpower_all(X_ds):
 
 
 def erp_all(X_ds):
-    N, T, n_ch = X_ds.shape
-    out = np.zeros((N, n_ch, len(ERP_WINDOWS_MS)))
-    for w, (a, b) in enumerate(ERP_WINDOWS_MS):
-        out[:, :, w] = X_ds[:, int(round(a/1000*FS)):int(round(b/1000*FS)), :].mean(axis=1)
-    return out
+    return core.erp_window_means(X_ds)
 
 
 def zero_channels(feat_perch, drop_ch):
@@ -127,10 +118,7 @@ def oof_predictions(y, groups, frac,
 
 
 def _fit_pred(Xtr, ytr, Xte, seed, acc, te, classes):
-    sc = StandardScaler().fit(Xtr)
-    clf = LogisticRegression(max_iter=2000, C=1.0, class_weight="balanced",
-                             solver="lbfgs", random_state=seed).fit(sc.transform(Xtr), ytr)
-    acc[te] += clf.predict_proba(sc.transform(Xte))
+    acc[te] += core.readout_proba(Xtr, ytr, Xte, seed)
 
 
 def subj_boot(y, groups, pred_map, n_boot=N_BOOT, seed=7):

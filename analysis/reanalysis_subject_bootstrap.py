@@ -32,22 +32,15 @@ from pathlib import Path
 
 import numpy as np
 from sklearn.model_selection import StratifiedGroupKFold
-from sklearn.preprocessing import StandardScaler
-from sklearn.linear_model import LogisticRegression
 from sklearn.impute import KNNImputer
 from sklearn.metrics import balanced_accuracy_score
 
-SEEDS = [42, 43, 44, 45, 46]
-N_FOLDS = 5
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+import core  # noqa: E402  (constants, ERP-window encoder, readout)
+from core import ERP_WINDOWS_MS, FS, N_BOOT, N_FOLDS, SEEDS  # noqa: E402,F401  (re-exported as RB.*)
+
 DROP_LEVELS = [0.1, 0.2, 0.3, 0.4, 0.5]
 FILLS = ["zero", "mean", "knn", "spatial"]
-N_BOOT = 4000
-FS = 256  # Hz
-# ERP windows (ms) -> sample indices on the 256-sample post-stimulus epoch.
-# Windows are in sample-index milliseconds (sample / 256 Hz), measured from the FIRST sample of
-# X_ds, which is 200 ms before stimulus onset (X_ds == raw[0:1024:4]; onset at raw sample 205,
-# X_ds sample 51). Relative to onset they span about -120..0, 50..250 and 250..600 ms.
-ERP_WINDOWS_MS = [(80, 200), (250, 450), (450, 800)]
 
 
 def _resolve_pickle() -> Path:
@@ -79,12 +72,7 @@ def build_blocks(d):
         print(f"[blocks] reservoir block was zeroed; loaded regenerated {res.shape} from {npy}")
     Xds = d["X_ds"].astype(float)                  # (N, 256, 34)
     # ERP-window: mean amplitude in three post-stimulus windows, per channel.
-    n_ch = Xds.shape[2]
-    erp = np.zeros((N, n_ch, len(ERP_WINDOWS_MS)))
-    for w, (a_ms, b_ms) in enumerate(ERP_WINDOWS_MS):
-        a = int(round(a_ms / 1000.0 * FS))
-        b = int(round(b_ms / 1000.0 * FS))
-        erp[:, :, w] = Xds[:, a:b, :].mean(axis=1)
+    erp = core.erp_window_means(Xds)
     return {
         "Band-power": (band.reshape(N, -1), band.shape[1:]),
         "ERP-window": (erp.reshape(N, -1), erp.shape[1:]),
@@ -144,11 +132,7 @@ def run_oof(X, ch_shape, y, groups, frac, fill):
                 rng = np.random.default_rng(1000 * seed + fold)
                 drop_ch, col_keep, _ = drop_channels(ch_shape, frac, rng)
                 Xte = fill_test(Xte, Xtr, ch_shape, drop_ch, col_keep, fill)
-            sc = StandardScaler().fit(Xtr)
-            clf = LogisticRegression(max_iter=2000, C=1.0, class_weight="balanced",
-                                     solver="lbfgs", random_state=seed)
-            clf.fit(sc.transform(Xtr), y[tr])
-            pr = clf.predict_proba(sc.transform(Xte))
+            pr = core.readout_proba(Xtr, y[tr], Xte, seed)
             proba_sum[te] += pr
             seen[te] += 1
     agg = proba_sum / np.maximum(seen[:, None], 1)
