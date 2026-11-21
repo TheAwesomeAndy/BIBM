@@ -73,8 +73,9 @@ Keep all of these. They are provenance.
 
 ## Adding an experiment after acceptance
 
-Not yet exercised. The convention below is the proposal approved in the
-modernization plan; tooling for it arrives in a later phase.
+Not yet exercised. The convention below was approved in the modernization
+plan. No tooling enforces it yet, and the directories it names do not exist
+until the first extension experiment creates them.
 
 1. Give it an ID with the prefix `X` and a date, for example `X01-2026-12`.
    Do not reuse `E1` to `E5`.

@@ -133,6 +133,8 @@ Cross-script consistency checks that should hold after a faithful rerun are in
 | Three reservoir implementations and three weight initializers are bitwise equal | verified 2026-11-21, synthetic signals only | this modernization, Phase 3 |
 | All cells of Tables I to III match the aggregate JSON | verified 2026-11-21 | this modernization, Phase 3 |
 | Refactored `analysis/` equals the baseline commit bitwise on 141 outputs | verified 2026-11-21, synthetic signals only | this modernization, Phase 4 |
+| A fresh clone of the pushed branch passes `make check` (67 tests) | verified 2026-11-21 | this modernization, Phase 5 |
+| The same checks pass on a GitHub-hosted runner (workflow `tests`, run 1, commit `45bfddc`) | verified 2026-11-21. A second machine reproduced the pinned reservoir hash and the baseline comparison | this modernization, Phase 5 |
 | Refactored `analysis/` reproduces the accepted numbers on SHAPE | **unverified** (data not reachable) | |
 | Anchor 0.4626 reproduces | historical, 2026-10-01 | camera-ready audit |
 | E2, E3 reruns identical to first runs | historical, 2026-10-01 | camera-ready audit |
