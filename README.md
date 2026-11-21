@@ -54,13 +54,14 @@ with `scripts/install_harness.py`. As of 2026-10-01 they are byte-identical to i
 
 - `harness/papercheck.toml` — project configuration (main file, single-blind venue);
 - `harness/memory/memory.jsonl` — this project's memory journal;
+- `.claude/settings.json` — the `git push` deny rule is removed (see `docs/HARNESS_OVERRIDES.md`, item 9);
 - `scripts/verify_latex.py` — bug fix not yet upstream: the build ran inside the
   manuscript directory but passed the caller-relative path, so any manuscript in a
   subdirectory (e.g. `manuscript/main.tex`) failed to build (the harness's own
   `good_latex_build` fixture fails without the fix; 70/70 fixtures pass with it).
 
 To re-sync, run the installer from a fresh clone of the harness repository and
-re-apply the three differences above.
+re-apply the differences above.
 
 ## Building the paper
 

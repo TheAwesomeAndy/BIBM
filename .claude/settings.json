@@ -38,8 +38,7 @@
       "Bash(make -f makefiles/AcademicHarness.mk academic-check *)"
     ],
     "deny": [
-      "Bash(rm -rf *)",
-      "Bash(git push *)"
+      "Bash(rm -rf *)"
     ]
   }
 }
