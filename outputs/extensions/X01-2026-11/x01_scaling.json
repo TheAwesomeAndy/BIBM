@@ -1,0 +1,315 @@
+{
+  "provenance": {
+    "experiment_id": "X01-2026-11",
+    "status": "extension; not part of the accepted BIBM 2026 paper",
+    "git_commit": "753215310e92f5ceaa92c257d4f77f502053580f",
+    "working_tree_dirty": false,
+    "utc_time": "2026-11-22T01:12:02Z",
+    "versions": {
+      "python": "3.13.18",
+      "numpy": "2.4.6",
+      "scikit-learn": "1.9.1",
+      "scipy": "1.18.1"
+    },
+    "data": {
+      "n_subjects_found": 211,
+      "n_subjects_complete": 211,
+      "n_observations": 633,
+      "raw_files_sha256_of_sorted_sha256": "62502c242344ee3197bd09ce553120ddc52635911eca5cc4058337d348a0fa3e",
+      "pickle_sha256": "b5ce2d542f15139bc6da9fccdfe0afa62f69b16aed90ab0b2ffd611e8a21568f"
+    },
+    "parameters": {
+      "rho": 0.9,
+      "scalings": [
+        "A_epoch_z",
+        "B_pre_sd",
+        "C_none",
+        "D_post_z"
+      ],
+      "encoders": [
+        "R1_reservoir_bibm",
+        "R2_reservoir_onset",
+        "P_prestim_mean",
+        "E_erp_windows"
+      ],
+      "sd_ddof": 0,
+      "onset_sample": 51,
+      "downsample": "raw[0:1024:4]",
+      "R1_window": [
+        10,
+        70
+      ],
+      "R1_bins": 6,
+      "R2_window": [
+        9,
+        51
+      ],
+      "R2_bins": 6,
+      "R2_simulated_samples": 51,
+      "prestim_window": [
+        9,
+        51
+      ],
+      "erp_windows_ms": [
+        [
+          80,
+          200
+        ],
+        [
+          250,
+          450
+        ],
+        [
+          450,
+          800
+        ]
+      ],
+      "pca_components": 64,
+      "seeds": [
+        42,
+        43,
+        44,
+        45,
+        46
+      ],
+      "n_folds": 5,
+      "n_boot": 4000,
+      "bootstrap_seeds": {
+        "subject_bootstrap": 12345,
+        "paired_diff_ci": 999
+      },
+      "excluded_subjects": [
+        "127"
+      ],
+      "step0_tolerance": 1e-05
+    }
+  },
+  "step0": {
+    "pickle_sha256": "b5ce2d542f15139bc6da9fccdfe0afa62f69b16aed90ab0b2ffd611e8a21568f",
+    "n_observations_rebuilt": 633,
+    "n_observations_pickle": 633,
+    "n_subjects_rebuilt": 211,
+    "n_subjects_pickle": 211,
+    "tolerance": 1e-05,
+    "shape_match": true,
+    "subject_order_match": true,
+    "labels_match": true,
+    "max_abs_difference": 0.0,
+    "diagnostic_max_abs_difference_ddof1": 0.010257071958843511,
+    "passed": true
+  },
+  "BA": {
+    "R1_reservoir_bibm": {
+      "A_epoch_z": {
+        "BA": 0.48657187993680884,
+        "ci95": [
+          0.4470774091627172,
+          0.5229067930489731
+        ]
+      },
+      "B_pre_sd": {
+        "BA": 0.2938388625592417,
+        "ci95": [
+          0.2606635071090047,
+          0.32543443917851506
+        ]
+      },
+      "C_none": {
+        "BA": 0.315955766192733,
+        "ci95": [
+          0.27804107424960506,
+          0.353870458135861
+        ]
+      },
+      "D_post_z": {
+        "BA": 0.4644549763033175,
+        "ci95": [
+          0.4249605055292259,
+          0.5023696682464455
+        ]
+      }
+    },
+    "R2_reservoir_onset": {
+      "A_epoch_z": {
+        "BA": 0.4202211690363349,
+        "ci95": [
+          0.38388625592417064,
+          0.4549763033175355
+        ]
+      },
+      "B_pre_sd": {
+        "BA": 0.296998420221169,
+        "ci95": [
+          0.26382306477093204,
+          0.3317535545023697
+        ]
+      },
+      "C_none": {
+        "BA": 0.2922590837282781,
+        "ci95": [
+          0.25750394944707744,
+          0.3285939968404423
+        ]
+      },
+      "D_post_z": {
+        "BA": 0.4976303317535545,
+        "ci95": [
+          0.4628751974723538,
+          0.5339652448657187
+        ]
+      }
+    },
+    "P_prestim_mean": {
+      "A_epoch_z": {
+        "BA": 0.5418641390205372,
+        "ci95": [
+          0.5071090047393365,
+          0.5766192733017378
+        ]
+      },
+      "B_pre_sd": {
+        "BA": 0.3459715639810426,
+        "ci95": [
+          0.3127962085308057,
+          0.38072669826224326
+        ]
+      },
+      "C_none": {
+        "BA": 0.33965244865718797,
+        "ci95": [
+          0.3033175355450237,
+          0.37598736176935227
+        ]
+      },
+      "D_post_z": {
+        "BA": 0.5545023696682465,
+        "ci95": [
+          0.5181674565560822,
+          0.5908372827804107
+        ]
+      }
+    },
+    "E_erp_windows": {
+      "A_epoch_z": {
+        "BA": 0.6287519747235387,
+        "ci95": [
+          0.5971563981042655,
+          0.6603475513428121
+        ]
+      },
+      "B_pre_sd": {
+        "BA": 0.5102685624012638,
+        "ci95": [
+          0.4770932069510268,
+          0.5434439178515008
+        ]
+      },
+      "C_none": {
+        "BA": 0.5450236966824645,
+        "ci95": [
+          0.5134281200631912,
+          0.576658767772512
+        ]
+      },
+      "D_post_z": {
+        "BA": 0.631911532385466,
+        "ci95": [
+          0.5971563981042655,
+          0.6666666666666666
+        ]
+      }
+    }
+  },
+  "firing_rate": {
+    "R1_reservoir_bibm": {
+      "A_epoch_z": 0.12391030788421631,
+      "B_pre_sd": 0.1294090747833252,
+      "C_none": 0.14369888603687286,
+      "D_post_z": 0.13567040860652924
+    },
+    "R2_reservoir_onset": {
+      "A_epoch_z": 0.1222764253616333,
+      "B_pre_sd": 0.12409260123968124,
+      "C_none": 0.13761700689792633,
+      "D_post_z": 0.1346116065979004
+    }
+  },
+  "paired_differences": {
+    "R1_reservoir_bibm": {
+      "A_epoch_z_minus_B_pre_sd": {
+        "mean_diff": 0.1931109794628752,
+        "ci95": [
+          0.13902053712480256,
+          0.24644549763033174
+        ]
+      },
+      "A_epoch_z_minus_C_none": {
+        "mean_diff": 0.17084676145339653,
+        "ci95": [
+          0.12164296998420215,
+          0.2227488151658768
+        ]
+      }
+    },
+    "R2_reservoir_onset": {
+      "A_epoch_z_minus_B_pre_sd": {
+        "mean_diff": 0.12352962085308056,
+        "ci95": [
+          0.07582938388625593,
+          0.17219589257503948
+        ]
+      },
+      "A_epoch_z_minus_C_none": {
+        "mean_diff": 0.12746840442338073,
+        "ci95": [
+          0.07740916271721959,
+          0.17693522906793052
+        ]
+      }
+    },
+    "P_prestim_mean": {
+      "A_epoch_z_minus_B_pre_sd": {
+        "mean_diff": 0.19617061611374406,
+        "ci95": [
+          0.14849921011058453,
+          0.24170616113744076
+        ]
+      },
+      "A_epoch_z_minus_C_none": {
+        "mean_diff": 0.20265876777251185,
+        "ci95": [
+          0.15323854660347552,
+          0.2527646129541864
+        ]
+      }
+    },
+    "E_erp_windows": {
+      "A_epoch_z_minus_B_pre_sd": {
+        "mean_diff": 0.11855055292259084,
+        "ci95": [
+          0.07582938388625593,
+          0.16113744075829384
+        ]
+      },
+      "A_epoch_z_minus_C_none": {
+        "mean_diff": 0.08412677725118484,
+        "ci95": [
+          0.04423380726698278,
+          0.12322274881516582
+        ]
+      }
+    }
+  },
+  "permutation_null": {
+    "encoder": "R1_reservoir_bibm",
+    "scaling": "B_pre_sd",
+    "partition_seed": 42,
+    "n_permutations": 50,
+    "rng_seed": 2026,
+    "observed_BA_single_partition": 0.30331753554502366,
+    "null_mean": 0.3314060031595577,
+    "null_p2.5": 0.29261453396524484,
+    "null_p97.5": 0.36931279620853086
+  },
+  "readout_convergence_warnings": 0
+}
