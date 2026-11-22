@@ -109,4 +109,55 @@ until the first extension experiment creates them.
 
 ## Extension experiments
 
-None.
+These are not part of the accepted paper. Verification status is one of:
+`not run`, `unverified`, `reproduced once`, `independently reproduced`.
+
+| ID | Question | Code | Output | Status |
+|---|---|---|---|---|
+| X01-2026-11 | Does the reservoir's balanced accuracy depend on the per-epoch z-scoring of its input? Four scalings (A epoch z-score, B pre-stimulus SD, C none, D post-stimulus z-score) by four encoders (R1 accepted reservoir, R2 the same reservoir stopped at stimulus onset, P pre-stimulus channel means, E ERP windows) under the accepted protocol, with a reproduction check against the paper's `X_ds` first and a within-subject permutation null | `experiments/X01-2026-11/run_x01.py` at commit `7532153`; needs `SHAPE_RAW_DIR` and `ARSPI_SHAPE_FEATURES` | `outputs/extensions/X01-2026-11/x01_scaling.json` | **run 2026-11-22 on the SHAPE data (211 subjects, 633 observations); reproduced once**: a second run from the same commit, on the same machine and in the same session, gave an output identical in every value. Not independently reproduced. See the summary below |
+
+### X01-2026-11 summary (new result, not part of the accepted paper)
+
+All values are from `outputs/extensions/X01-2026-11/x01_scaling.json`. Balanced
+accuracy with subject-level 95% CI; chance is 0.333.
+
+Step 0: the signal rebuilt from the raw epochs equals the paper's `X_ds`
+(maximum absolute difference 0.0; subject order and labels match).
+
+| Encoder | A epoch_z | B pre_sd | C none | D post_z |
+|---|---|---|---|---|
+| R1 reservoir_bibm | 0.487 [0.447, 0.523] | 0.294 [0.261, 0.325] | 0.316 [0.278, 0.354] | 0.464 [0.425, 0.502] |
+| R2 reservoir_onset | 0.420 [0.384, 0.455] | 0.297 [0.264, 0.332] | 0.292 [0.258, 0.329] | 0.498 [0.463, 0.534] |
+| P prestim_mean | 0.542 [0.507, 0.577] | 0.346 [0.313, 0.381] | 0.340 [0.303, 0.376] | 0.555 [0.518, 0.591] |
+| E erp_windows | 0.629 [0.597, 0.660] | 0.510 [0.477, 0.543] | 0.545 [0.513, 0.577] | 0.632 [0.597, 0.667] |
+
+Paired differences (A minus B, A minus C): R1 +0.193 [+0.139, +0.246] and
++0.171 [+0.122, +0.223]; R2 +0.124 [+0.076, +0.172] and +0.127 [+0.077, +0.177];
+P +0.196 [+0.148, +0.242] and +0.203 [+0.153, +0.253]; E +0.119 [+0.076, +0.161]
+and +0.084 [+0.044, +0.123].
+
+Mean firing rate: R1 0.124, 0.129, 0.144, 0.136 and R2 0.122, 0.124, 0.138,
+0.135 under A, B, C, D.
+
+Permutation null for R1 under B (partition seed 42, 50 permutations): null mean
+0.331, 2.5th to 97.5th percentile 0.293 to 0.369; observed 0.303.
+
+What was observed, stated without interpretation beyond the numbers:
+
+- The R1 and E values under A reproduce the accepted paper's 0.487
+  [0.447, 0.523] and 0.629 [0.597, 0.660].
+- The reservoir's accuracy depends on the scaling. Under B and C its interval
+  contains chance, and under B the observed value lies inside the permutation
+  null.
+- Pre-stimulus channel means (P) and a reservoir that never receives a
+  post-stimulus sample (R2) are above chance under A and D and at chance under
+  B and C. A and D use post-stimulus samples to compute the scaling; B and C do
+  not.
+- Firing rates are similar across scalings, so the differences are not
+  explained by a silent or saturated reservoir.
+
+This result does not change the accepted paper, its outputs, or its figures.
+It bears on the corrected-window question already listed in
+`docs/RESEARCH_MAP.md` (audit A18). What it means for the paper's claims is the
+author's decision.
+
