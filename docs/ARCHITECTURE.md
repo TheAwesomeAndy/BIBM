@@ -115,6 +115,7 @@ Current gate status, including two gates that fail for known reasons, is in
 |---|---|
 | `pyproject.toml` | Pinned dependencies and pytest configuration. The code is still scripts, not a package |
 | `tests/` | Project test suite. Synthetic signals only; reads no restricted data and writes nothing into `outputs/` |
+| `experiments/<ID>/`, `outputs/extensions/<ID>/` | Extension experiments made after acceptance (`docs/EXPERIMENT_REGISTRY.md`). They import `analysis/core.py`; they never write to `outputs/aggregate/` |
 | `tests/golden/synthetic_reservoir.json` | Pinned reservoir outputs of the baseline implementation on the synthetic fixture |
 | `Makefile` | `make check` runs checksums, the wording gate, and the tests. Includes the harness makefile with this project's manuscript path |
 | `.github/workflows/tests.yml` | Runs `make check` on push and pull request |

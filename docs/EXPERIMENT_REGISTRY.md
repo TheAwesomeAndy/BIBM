@@ -109,4 +109,9 @@ until the first extension experiment creates them.
 
 ## Extension experiments
 
-None.
+These are not part of the accepted paper. Verification status is one of:
+`not run`, `unverified`, `reproduced once`, `independently reproduced`.
+
+| ID | Question | Code | Output | Status |
+|---|---|---|---|---|
+| X01-2026-11 | Does the reservoir's balanced accuracy depend on the per-epoch z-scoring of its input? Four scalings (epoch z-score, pre-stimulus SD, none, post-stimulus z-score) by four encoders (accepted reservoir, a reservoir that stops at stimulus onset, pre-stimulus channel means, ERP windows) under the accepted protocol, with a reproduction check against the paper's `X_ds` first and a within-subject permutation null | `experiments/X01-2026-11/run_x01.py`; needs `SHAPE_RAW_DIR` and `ARSPI_SHAPE_FEATURES` | `outputs/extensions/X01-2026-11/x01_scaling.json` (not yet produced) | **not run.** Code written 2026-11-22 and exercised on synthetic stand-in files only (`tests/test_x01_extension.py`). The raw SHAPE epochs and the feature pickle were not reachable from the session. No result exists |
